@@ -27,6 +27,10 @@ public class Main {
 		for(int i = 0; i < har.getLog().getEntries().size(); i++) {
 			String method = har.getLog().getEntries().get(i).getRequest().getMethod().toString();
 			String url = har.getLog().getEntries().get(i).getRequest().getUrl().toString();
+			String req_body = "";
+			if(har.getLog().getEntries().get(i).getRequest().getPostData().getText() != null) {
+				req_body = har.getLog().getEntries().get(i).getRequest().getPostData().getText().toString();
+			}
 			
 			int res_status = har.getLog().getEntries().get(i).getResponse().getStatus();
 			
@@ -45,6 +49,7 @@ public class Main {
 			Request request = new Request();
 			request.set("method", method);
 			request.set("url", url);
+			request.set("request_body", req_body);
 			request.set("response_status", res_status);
 			request.set("response_type", res_type);
 			request.set("response_body", res_body);
