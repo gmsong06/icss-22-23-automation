@@ -6,12 +6,14 @@ import org.javalite.activejdbc.*;
 
 import de.sstoehr.harreader.HarReader;
 import de.sstoehr.harreader.HarReaderException;
+import de.sstoehr.harreader.model.Har;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import java.util.*;
+import java.io.*;
 
 public class Main {
 	private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -21,7 +23,23 @@ public class Main {
     
 	public static void main(String[] args) throws HarReaderException {
 		Base.open(DRIVER, URL, USERNAME, PASSWORD);
-
+		
+		HarReader harReader = new HarReader();
+		Har har = harReader.readFromFile(new File("extempore.har"));
+		
+		for(int i = 0; i < har.getLog().getEntries().size(); i++) {
+			System.out.println("Request url: " + har.getLog().getEntries().get(i).getRequest().getUrl());
+			System.out.println("Request method: " + har.getLog().getEntries().get(i).getRequest().getMethod());
+			System.out.println("Request headers:");
+			for(int j = 0; j < har.getLog().getEntries().get(i).getRequest().getHeaders().size(); j++) {
+				System.out.println("name: " + har.getLog().getEntries().get(i).getRequest().getHeaders().get(j).getName());
+				System.out.println("value: " + har.getLog().getEntries().get(i).getRequest().getHeaders().get(j).getValue());
+				System.out.println();
+			}
+			System.out.println("---------------------------------");
+		}
+		
+		/*
 		// Create a new request object
 		ApiRequest request = new ApiRequest();
 		request.set("url", "https://test.com/api");
@@ -33,7 +51,7 @@ public class Main {
 
 		// Save the request to the database
 		request.saveIt();
-		
+		*/
 		
 		Base.close();
 		
