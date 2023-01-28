@@ -3,6 +3,10 @@
 	<groupId>com.icssociety</groupId>
 	<artifactId>automated-requests</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>de.sstoehr</groupId>
@@ -22,11 +26,11 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<plugins>
+	<plugins>
 			<plugin>
 				<groupId>org.javalite</groupId>
 				<artifactId>activejdbc-instrumentation</artifactId>
-				<version>1.4.13</version>
+				<version>3.4-j11</version>
 				<executions>
 					<execution>
 						<phase>process-classes</phase>
@@ -42,9 +46,10 @@
 				<plugin>
 					<groupId>org.javalite</groupId>
 					<artifactId>activejdbc-instrumentation</artifactId>
-					<version>1.4.13</version>
+					<version>3.4-j11</version>
 					<executions>
 						<execution>
+							<?m2e ignore?>
 							<phase>process-classes</phase>
 							<goals>
 								<goal>instrument</goal>
