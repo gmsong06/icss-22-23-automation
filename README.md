@@ -1,6 +1,6 @@
 # ICSS 2022-2023 Code
 
-##[Detailed Documentation](https://docs.google.com/document/d/1g-DlUaNsXySt4_ML0YDGMqtFW_TqB_vFkK_lOTesyTM/edit?usp=sharing)
+## [Detailed Documentation](https://docs.google.com/document/d/1g-DlUaNsXySt4_ML0YDGMqtFW_TqB_vFkK_lOTesyTM/edit?usp=sharing)
 
 ## Prerequisites
 
