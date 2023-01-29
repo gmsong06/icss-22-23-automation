@@ -26,7 +26,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-	<plugins>
+		<plugins>
 			<plugin>
 				<groupId>org.javalite</groupId>
 				<artifactId>activejdbc-instrumentation</artifactId>
@@ -39,6 +39,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<mainClass>com.your.package.MainClass</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>

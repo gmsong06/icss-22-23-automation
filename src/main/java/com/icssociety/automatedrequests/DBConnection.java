@@ -10,10 +10,10 @@ public class DBConnection {
     private static final String PASSWORD = "P6iHQb^a6*p";
 
     public static void open() {
-        Base.open(DRIVER, URL, USERNAME, PASSWORD);
+        Base.open(DRIVER, URL, USERNAME, PASSWORD); // establishes a connection to the database
     }
 
     public static void close() {
-        Base.close();
+        Base.close(); // closes the connection to the database
     }
 }
