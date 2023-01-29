@@ -1,5 +1,7 @@
 # ICSS 2022-2023 Code
 
+##[Detailed Documentation](https://docs.google.com/document/d/1g-DlUaNsXySt4_ML0YDGMqtFW_TqB_vFkK_lOTesyTM/edit?usp=sharing)
+
 ## Prerequisites
 
 Before you begin, make sure you have the following software installed on your system:
