@@ -58,6 +58,7 @@ public class Main {
 		}
 		
 		DBConnection.close(); // closes the connection to the database
+		SetRequestHeader.save();
 		
 	}
 	

@@ -11,9 +11,9 @@ import de.sstoehr.harreader.model.HarHeader;
 import java.util.*;
 import java.io.*;
 
-public class SetHeader {
+public class SetRequestHeader {
     
-	public static void main(String[] args) throws HarReaderException {
+	public static void save() throws HarReaderException {
 		DBConnection.open(); // opens the connection to the database
 		
 		// removeAllRequests(); // WARNING only call if you want to remove all the rows in the table
@@ -28,7 +28,7 @@ public class SetHeader {
 				String name = headers.get(j).getName().toString();
 				String value = headers.get(j).getValue().toString();
 								
-				Header header = new Header(); // creates an instance of the Request model
+				RequestHeader header = new RequestHeader(); // creates an instance of the Request model
 				
 				// // populates the request object with all the necessary info
 				header.set("value", value);
@@ -38,11 +38,8 @@ public class SetHeader {
 			}
 			
 		}
-		
 		DBConnection.close(); // closes the connection to the database
-		
 	}
-	
 	// removes all the rows in the requests table in the database
 	public static void removeAllRequests() {
 		Request.deleteAll();
