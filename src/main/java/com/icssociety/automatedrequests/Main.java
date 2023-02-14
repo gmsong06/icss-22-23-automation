@@ -56,6 +56,8 @@ public class Main {
 			
 			request.saveIt(); // saves it to the database
 		}
+
+		SetResponseHeaders.save(har);
 		
 		DBConnection.close(); // closes the connection to the database
 		SetRequestHeader.save();
