@@ -17,6 +17,7 @@ import java.io.*;
 import de.sstoehr.harreader.HarReader;
 import de.sstoehr.harreader.HarReaderException;
 import de.sstoehr.harreader.model.Har;
+import de.sstoehr.harreader.model.HarEntry;
 
 import java.util.*;
 import java.io.*;
@@ -26,30 +27,31 @@ public class Main {
 	public static void main(String[] args) throws HarReaderException {
 		DBConnection.open(); // opens the connection to the database
 		
-		removeAllRequests(); // WARNING only call if you want to remove all the rows in the table
+		// removeAllRequests(); // WARNING only call if you want to remove all the rows in the table
 		
 		HarReader harReader = new HarReader(); // creates an instance of HarReader, the module we use to read .har data
 		Har har = harReader.readFromFile(new File("./data/Extempore.har")); // har stores the .har data by using the harReader created above
 		
 		for(int i = 0; i < har.getLog().getEntries().size(); i++) { // loops through all the entries of the .har file
-			String method = har.getLog().getEntries().get(i).getRequest().getMethod().toString(); // request method
-			String url = har.getLog().getEntries().get(i).getRequest().getUrl().toString(); // request url
+			HarEntry entry = har.getLog().getEntries().get(i);
+			String method = entry.getRequest().getMethod().toString(); // request method
+			String url = entry.getRequest().getUrl().toString(); // request url
 			String req_body = ""; // request body if it exists
-			if(har.getLog().getEntries().get(i).getRequest().getPostData().getText() != null) { // checks if there is a request body
-				req_body = har.getLog().getEntries().get(i).getRequest().getPostData().getText().toString(); 
+			if(entry.getRequest().getPostData().getText() != null) { // checks if there is a request body
+				req_body = entry.getRequest().getPostData().getText().toString(); 
 			}
 			
-			int res_status = har.getLog().getEntries().get(i).getResponse().getStatus(); // response status
+			int res_status = entry.getResponse().getStatus(); // response status
 			
 			String res_type = "";
 			String res_body = "";
 			
-			if(har.getLog().getEntries().get(i).getResponse().getContent().getMimeType() != null) { // checks if there is a response type
-				res_type = har.getLog().getEntries().get(i).getResponse().getContent().getMimeType().toString(); 
+			if(entry.getResponse().getContent().getMimeType() != null) { // checks if there is a response type
+				res_type = entry.getResponse().getContent().getMimeType().toString(); 
 			}
 			
-			if(har.getLog().getEntries().get(i).getResponse().getContent().getText() != null) { //checks if there is a response body
-				res_body = har.getLog().getEntries().get(i).getResponse().getContent().getText().toString();		
+			if(entry.getResponse().getContent().getText() != null) { //checks if there is a response body
+				res_body = entry.getResponse().getContent().getText().toString();		
 			}
 			String first_recorded = "enter_name"; // who first recorded this data
 			
@@ -66,6 +68,8 @@ public class Main {
 			
 			request.saveIt(); // saves it to the database
 		}
+
+		SetResponseHeaders.save(har);
 		
 		HttpRequest req = null;
 		
@@ -84,6 +88,7 @@ public class Main {
 			}
 		
 		DBConnection.close(); // closes the connection to the database
+		SetRequestHeader.save();
 		
 	}
 	
