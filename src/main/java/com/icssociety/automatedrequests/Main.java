@@ -2,6 +2,18 @@ package com.icssociety.automatedrequests;
 
 import org.javalite.activejdbc.*;
 
+import org.json.JSONObject;//for sending requests
+
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;//likewise until here
+
+import java.util.*;
+import java.io.*;
+ 
+
 import de.sstoehr.harreader.HarReader;
 import de.sstoehr.harreader.HarReaderException;
 import de.sstoehr.harreader.model.Har;
@@ -18,7 +30,7 @@ public class Main {
 		// removeAllRequests(); // WARNING only call if you want to remove all the rows in the table
 		
 		HarReader harReader = new HarReader(); // creates an instance of HarReader, the module we use to read .har data
-		Har har = harReader.readFromFile(new File("./data/your_file_name.har")); // har stores the .har data by using the harReader created above
+		Har har = harReader.readFromFile(new File("./data/Extempore.har")); // har stores the .har data by using the harReader created above
 		
 		for(int i = 0; i < har.getLog().getEntries().size(); i++) { // loops through all the entries of the .har file
 			HarEntry entry = har.getLog().getEntries().get(i);
@@ -58,6 +70,22 @@ public class Main {
 		}
 
 		SetResponseHeaders.save(har);
+		
+		HttpRequest req = null;
+		
+		req = Unirest.get("api.genshin.dev/artifacts/adventurer");//random url
+		System.out.println(req.getUrl());
+
+		try {
+			
+			  HttpResponse<JsonNode> boom = req.asJson();
+			 
+			  System.out.println(boom);
+				JsonNode node = boom.getBody();
+				System.out.println(node);
+			} catch (UnirestException e) {
+				System.out.println("request error occurred: " + e);
+			}
 		
 		DBConnection.close(); // closes the connection to the database
 		SetRequestHeader.save();
