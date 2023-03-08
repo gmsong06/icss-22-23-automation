@@ -10,8 +10,6 @@ import de.sstoehr.harreader.model.HarHeader;
 
 public class SetRequestHeader {
     public static void save(Har har) {
-    	DBConnection.open();
-    	
     	List<HarEntry> entries = har.getLog().getEntries();
         for(int i = 0; i < entries.size(); i++) { // loops through all the entries of the .har file
         	// TODO: GET REQUEST ID AND SAVE IT
@@ -19,8 +17,8 @@ public class SetRequestHeader {
         	List<HarHeader> headers = entries.get(i).getRequest().getHeaders(); // list of response headers
 
 			for(HarHeader h : headers) {
-				String name = h.getName();
-				String value = h.getValue();
+				String name = h.getName().toString();
+				String value = h.getValue().toString();
 				
 				RequestHeader requestHeader = new RequestHeader(); // creates an instance of the ResponseHeader model
 				requestHeader.set("name", name);
@@ -29,6 +27,5 @@ public class SetRequestHeader {
 			}
 			
 		}
-        DBConnection.close(); // closes the connection to the database
     }
 }
