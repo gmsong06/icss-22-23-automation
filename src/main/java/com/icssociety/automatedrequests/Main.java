@@ -2,14 +2,6 @@ package com.icssociety.automatedrequests;
 
 import org.javalite.activejdbc.*;
 
-import org.json.JSONObject;//for sending requests
-
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.HttpRequest;//likewise until here
-
 import java.util.*;
 import java.io.*;
  
