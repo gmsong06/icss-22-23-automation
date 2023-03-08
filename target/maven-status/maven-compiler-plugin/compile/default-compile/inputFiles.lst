@@ -1,3 +1,7 @@
-C:\Users\Ben\Desktop\icss-22-23-code\src\main\java\com\icssociety\automatedrequests\Request.java
-C:\Users\Ben\Desktop\icss-22-23-code\src\main\java\com\icssociety\automatedrequests\DBConnection.java
-C:\Users\Ben\Desktop\icss-22-23-code\src\main\java\com\icssociety\automatedrequests\Main.java
+/home/ann/Desktop/ICSS/icss-22-23-code/src/main/java/com/icssociety/automatedrequests/Main.java
+/home/ann/Desktop/ICSS/icss-22-23-code/src/main/java/com/icssociety/automatedrequests/Request.java
+/home/ann/Desktop/ICSS/icss-22-23-code/src/main/java/com/icssociety/automatedrequests/RequestHeader.java
+/home/ann/Desktop/ICSS/icss-22-23-code/src/main/java/com/icssociety/automatedrequests/DBConnection.java
+/home/ann/Desktop/ICSS/icss-22-23-code/src/main/java/com/icssociety/automatedrequests/SetRequestHeader.java
+/home/ann/Desktop/ICSS/icss-22-23-code/src/main/java/com/icssociety/automatedrequests/SetResponseHeaders.java
+/home/ann/Desktop/ICSS/icss-22-23-code/src/main/java/com/icssociety/automatedrequests/ResponseHeader.java

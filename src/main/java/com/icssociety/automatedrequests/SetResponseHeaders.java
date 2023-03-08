@@ -5,23 +5,30 @@ import java.util.*;
 import de.sstoehr.harreader.HarReader;
 import de.sstoehr.harreader.HarReaderException;
 import de.sstoehr.harreader.model.Har;
+import de.sstoehr.harreader.model.HarEntry;
 import de.sstoehr.harreader.model.HarHeader;
 
 public class SetResponseHeaders {
     public static void save(Har har) {
-        for(int i = 0; i < har.getLog().getEntries().size(); i++) { // loops through all the entries of the .har file
-			String req_id = har.getLog().getEntries().get(i).getRequest().getId().toString(); // request id
-			List<HarHeader> headers = har.getLog().getEntries().get(i).getResponse().getHeaders(); // list of response headers
+    	DBConnection.open();
+    	
+    	List<HarEntry> entries = har.getLog().getEntries();
+        for(int i = 0; i < entries.size(); i++) { // loops through all the entries of the .har file
+        	// TODO: GET REQUEST ID AND SAVE IT
+			
+        	List<HarHeader> headers = entries.get(i).getResponse().getHeaders(); // list of response headers
 
-			ResponseHeader response_header = new ResponseHeader(); // creates an instance of the ResponseHeader model
-
-			for(HarHeader h: headers) {
-				response_header.set("request_id", req_id);
-				response_header.set("name", h.getName());
-				response_header.set("value", h.getValue());
-				response_header.saveIt(); // saves it to the database
+			for(HarHeader h : headers) {
+				String name = h.getName();
+				String value = h.getValue();
+				
+				ResponseHeader responseHeader = new ResponseHeader(); // creates an instance of the ResponseHeader model
+				responseHeader.set("name", name);
+				responseHeader.set("value", value);
+				responseHeader.saveIt(); // saves it to the database
 			}
 			
 		}
+        DBConnection.close(); // closes the connection to the database
     }
 }

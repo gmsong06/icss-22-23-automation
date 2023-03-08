@@ -69,26 +69,27 @@ public class Main {
 			request.saveIt(); // saves it to the database
 		}
 
+		SetRequestHeader.save(har);
 		SetResponseHeaders.save(har);
 		
-		HttpRequest req = null;
 		
-		req = Unirest.get("api.genshin.dev/artifacts/adventurer");//random url
-		System.out.println(req.getUrl());
-
-		try {
-			
-			  HttpResponse<JsonNode> boom = req.asJson();
-			 
-			  System.out.println(boom);
-				JsonNode node = boom.getBody();
-				System.out.println(node);
-			} catch (UnirestException e) {
-				System.out.println("request error occurred: " + e);
-			}
+//		HttpRequest req = null;
+//		
+//		req = Unirest.get("api.genshin.dev/artifacts/adventurer");//random url
+//		System.out.println(req.getUrl());
+//
+//		try {
+//			
+//			  HttpResponse<JsonNode> boom = req.asJson();
+//			 
+//			  System.out.println(boom);
+//				JsonNode node = boom.getBody();
+//				System.out.println(node);
+//			} catch (UnirestException e) {
+//				System.out.println("request error occurred: " + e);
+//			}
 		
 		DBConnection.close(); // closes the connection to the database
-		SetRequestHeader.save();
 		
 	}
 	
