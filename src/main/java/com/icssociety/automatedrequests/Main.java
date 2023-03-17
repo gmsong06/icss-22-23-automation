@@ -19,14 +19,14 @@ public class Main {
 	public static void main(String[] args) throws HarReaderException {
 		DBConnection.open();
 		
-		// removeAllRequests(); // only call if you want to remove all the rows in the table
+		 removeAllRequests(); // only call if you want to remove all the rows in the table
 		
 		HarReader harReader = new HarReader();
 		Har har = harReader.readFromFile(new File("./data/Extempore.har"));
 
 		SaveRequests.save(har);
-		SetRequestHeader.save(har);
-		SetResponseHeaders.save(har);
+//		SetRequestHeader.save(har);
+//		SetResponseHeaders.save(har);
 		
 		DBConnection.close();
 		
