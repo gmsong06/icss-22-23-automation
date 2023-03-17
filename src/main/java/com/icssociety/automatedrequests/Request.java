@@ -33,11 +33,11 @@ public class Request extends Model { // the Request model that is stored in the 
 		String resType = "";
 		String resBody = "";
 		
-		if(this.checkResponseType()) { // checks if there is a response type
+		if(this.checkResponseType()) {
 			resType = response.getContent().getMimeType().toString(); 
 		}
 		
-		if(this.checkResponseBody()) { //checks if there is a response body
+		if(this.checkResponseBody()) {
 			resBody = response.getContent().getText().toString();		
 		}
 		

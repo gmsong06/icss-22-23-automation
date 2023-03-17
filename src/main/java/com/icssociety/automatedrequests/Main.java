@@ -19,14 +19,12 @@ public class Main {
 	public static void main(String[] args) throws HarReaderException {
 		DBConnection.open();
 		
-		 removeAllRequests(); // only call if you want to remove all the rows in the table
+		removeAllRequests(); // only call if you want to remove all the rows in the table
 		
 		HarReader harReader = new HarReader();
 		Har har = harReader.readFromFile(new File("./data/Extempore.har"));
 
 		SaveRequests.save(har);
-//		SetRequestHeader.save(har);
-//		SetResponseHeaders.save(har);
 		
 		DBConnection.close();
 		
@@ -35,6 +33,10 @@ public class Main {
 	// removes all the rows in the requests table in the database
 	public static void removeAllRequests() {
 		Request.deleteAll();
+		RequestHeader.deleteAll();
+		ResponseHeader.deleteAll();
 		Base.exec("ALTER TABLE requests AUTO_INCREMENT = 1");
+		Base.exec("ALTER TABLE request_headers AUTO_INCREMENT = 1");
+		Base.exec("ALTER TABLE response_headers AUTO_INCREMENT = 1");
 	}
 }
