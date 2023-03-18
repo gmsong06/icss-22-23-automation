@@ -16,7 +16,7 @@ public class Request extends Model { // the Request model that is stored in the 
 	HarResponse response;
 	String firstRecorded;
 	public Request() {}
-	public Request(HarEntry har, String firstRecorded) {
+	public Request(HarEntry har, String firstRecorded, int isGenerated) {
 		this.har = har;
 		this.request = har.getRequest();
 		this.response = har.getResponse();
@@ -49,6 +49,7 @@ public class Request extends Model { // the Request model that is stored in the 
 		this.setResponseType(resType);
 		this.setResponseBody(resBody);
 		this.setFirstRecorded(firstRecorded);
+		this.setIsGenerated(isGenerated);
 	}
 	
 	public void setMethod(String method) {
@@ -79,6 +80,14 @@ public class Request extends Model { // the Request model that is stored in the 
 		this.set("first_recorded", firstRecorded);
 	}
 	
+	public void setIsGenerated(int isGenerated) {
+		this.set("is_generated", isGenerated);
+	}
+	
+	public void setModification(String modification) {
+		this.set("modification", modification);
+	}
+	
 	public Object getMethod() {
 		return this.get("method");
 	}
@@ -105,6 +114,14 @@ public class Request extends Model { // the Request model that is stored in the 
 	
 	public Object getFirstRecorded() {
 		return this.get("first_recorded");
+	}
+	
+	public Object getIsGenerated() {
+		return this.get("is_generated");
+	}
+	
+	public Object getModification() {
+		return this.get("modification");
 	}
 	
 	public boolean checkRequestBody() {

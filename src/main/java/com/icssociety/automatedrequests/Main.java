@@ -19,24 +19,41 @@ public class Main {
 	public static void main(String[] args) throws HarReaderException {
 		DBConnection.open();
 		
-		removeAllRequests(); // only call if you want to remove all the rows in the table
+		removeAllRequests();
+		removeAllRequestHeaders();
+		removeAllResponseHeaders();
 		
 		HarReader harReader = new HarReader();
 		Har har = harReader.readFromFile(new File("./data/Extempore.har"));
 
 		SaveRequests.save(har);
 		
+		System.out.println("STARTED MODIFYING");
+		generateModifiedRequests(Request.findById(1), 1, "DELETE_HEADER");
+		System.out.println("STOPPED MODIFYING");
+		
 		DBConnection.close();
 		
 	}
-	
-	// removes all the rows in the requests table in the database
+
+	public static void generateModifiedRequests(Request request, int id, String strategy) {
+		if(strategy.equals("DELETE_HEADER")) {
+			GenerationStrategy.deleteHeader(request, id);
+		}
+	}
 	public static void removeAllRequests() {
-		Request.deleteAll();
-		RequestHeader.deleteAll();
-		ResponseHeader.deleteAll();
+		Base.exec("DELETE FROM requests");
 		Base.exec("ALTER TABLE requests AUTO_INCREMENT = 1");
+	}
+	
+	public static void removeAllRequestHeaders() {
+		Base.exec("DELETE FROM request_headers");
 		Base.exec("ALTER TABLE request_headers AUTO_INCREMENT = 1");
+	}
+	
+	public static void removeAllResponseHeaders() {
+		Base.exec("DELETE FROM response_headers");
 		Base.exec("ALTER TABLE response_headers AUTO_INCREMENT = 1");
 	}
+	
 }

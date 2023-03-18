@@ -17,7 +17,7 @@ public class SaveRequests {
     	for(int i = 0; i < entries.size(); i++) {
 			HarEntry entry = entries.get(i);
 			
-			Request request = new Request(entry, "Ann");
+			Request request = new Request(entry, "Ann", 0);
 			request.save();
 			
 			List<HarHeader> requestHeaders = entry.getRequest().getHeaders();
