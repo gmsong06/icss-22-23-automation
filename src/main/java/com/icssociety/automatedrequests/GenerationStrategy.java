@@ -24,13 +24,23 @@ public class GenerationStrategy {
 			request.setModification("removed header number " + (headerIndex + 1) + " from the request with id of " + id);
 
 			System.out.println("SENDING MODIFIED REQUEST # " + i);
+			sendModifiedRequest(request, temp);			
+			System.out.println("COMPLETED MODIFIED REQUEST # " + i);			
+			
+			for(RequestHeader h : temp) {
+				h.setRequestId(id);
+				h.setId(null);
+				h.save();
+			}
+		}
+	}
 
-			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-
-			try {
+	private static void sendModifiedRequest(Request request, List<RequestHeader> modifiedHeaders) {
+		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+		try {
        		HttpRequest new_request = HTTP_TRANSPORT.createRequestFactory().buildRequest((String) request.getMethod(), new GenericUrl((String) request.getUrl()), null);
 			HttpHeaders new_headers = new HttpHeaders();
-			for(RequestHeader h: temp) {
+			for(RequestHeader h: modifiedHeaders) {
 				new_headers.set((String)h.getName(), (String) h.getValue());
 			}
 
@@ -48,18 +58,9 @@ public class GenerationStrategy {
 
 			request.setResponseBody(res);
 			response.disconnect();
-			} catch(Exception e) {
-				System.out.println(e.toString());
-			}
-
-			System.out.println("COMPLETED MODIFIED REQUEST # " + i);			
-			request.save();
-			
-			for(RequestHeader h : temp) {
-				h.setRequestId(id);
-				h.setId(null);
-				h.save();
-			}
+		} catch(Exception e) {
+			System.out.println(e.toString());
 		}
+		request.save();
 	}
 }
