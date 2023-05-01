@@ -19,7 +19,6 @@ public class GenerationStrategy {
 			int headerIndex = i;
 			
 			temp.remove(headerIndex);
-
 			request.setIsGenerated(1);
 			request.setId(null);
 			request.setModification("removed header number " + (headerIndex + 1) + " from the request with id of " + id);
@@ -34,18 +33,26 @@ public class GenerationStrategy {
 			for(RequestHeader h: temp) {
 				new_headers.set((String)h.getName(), (String) h.getValue());
 			}
-			Future<HttpResponse> response = new_request.setHeaders(new_headers).executeAsync();
-			
-			request.setResponseStatus(response.get().getStatusCode());
-			request.setResponseBody(response.get().parseAsString());
-			System.out.println(response.get().parseAsString());
-			response.get().disconnect();
+
+			HttpResponse response = new_request.setHeaders(new_headers).executeAsync().get();
+			request.setResponseStatus(response.getStatusCode());
+			String res = response.parseAsString();
+
+			if(!res.equals(request.getResponseBody().toString())) {
+				if((int) response.getStatusCode() < 400) {
+					request.setIsGenerated(3);
+				} else {
+					request.setIsGenerated(2);
+				}
+			}
+
+			request.setResponseBody(res);
+			response.disconnect();
 			} catch(Exception e) {
 				System.out.println(e.toString());
 			}
 
-			System.out.println("COMPLETED MODIFIED REQUEST # " + i);
-			
+			System.out.println("COMPLETED MODIFIED REQUEST # " + i);			
 			request.save();
 			
 			for(RequestHeader h : temp) {

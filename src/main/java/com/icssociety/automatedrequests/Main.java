@@ -29,7 +29,7 @@ public class Main {
 		SaveRequests.save(har);
 		
 		System.out.println("STARTED MODIFYING");
-		generateModifiedRequests(Request.findById(1), 1, "DELETE_HEADER");
+		generateModifiedRequests(Request.findById(18), 18, "DELETE_HEADER");
 		System.out.println("STOPPED MODIFYING");
 		
 		DBConnection.close();
