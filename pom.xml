@@ -7,6 +7,22 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+	<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>libraries-bom</artifactId>
+      <version>25.4.0</version>
+      <type>pom</type>
+      <scope>import</scope>
+     </dependency>
+	 <!-- <dependency>
+  <groupId>com.google.http-client</groupId>
+  <artifactId>google-http-client</artifactId>
+  <version>1.43.1</version>
+</dependency> -->
+   </dependencies>
+</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>de.sstoehr</groupId>
@@ -24,6 +40,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.32</version>
 		</dependency>
+		<dependency>
+  <groupId>com.google.http-client</groupId>
+  <artifactId>google-http-client</artifactId>
+  <version>1.43.1</version>
+</dependency>
 	</dependencies>
 	<build>
 		<plugins>
