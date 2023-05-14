@@ -11,11 +11,10 @@ import de.sstoehr.harreader.HarReaderException;
 import de.sstoehr.harreader.model.Har;
 import de.sstoehr.harreader.model.HarEntry;
 
-import java.util.*;
-import java.io.*;
-
 public class Main {
-    
+	
+	static HashMap<String, GenerationStrategy> staticGenerationStrategies = new HashMap<>();
+	
 	public static void main(String[] args) throws HarReaderException {
 		DBConnection.open();
 		
@@ -28,18 +27,24 @@ public class Main {
 
 		SaveRequests.save(har);
 		
+		staticGenerationStrategies.put("DELETE_HEADER", new GenerationStrategyDeleteHeader());
+		
 		System.out.println("STARTED MODIFYING");
-		generateModifiedRequests(Request.findById(18), 18, "DELETE_HEADER");
+		generateModifiedRequests(Request.findById(18), 18);
 		System.out.println("STOPPED MODIFYING");
 		
 		DBConnection.close();
 		
 	}
-
-	public static void generateModifiedRequests(Request request, int id, String strategy) {
-		if(strategy.equals("DELETE_HEADER")) {
-			GenerationStrategy.deleteHeader(request, id);
+	
+	public static void generateModifiedRequests(Request request, int id) {
+		for(String i : staticGenerationStrategies.keySet()) {
+			GenerationStrategy strategy = staticGenerationStrategies.get(i);
+			
+			strategy.sendModifiedRequest(request);
+			
 		}
+
 	}
 	public static void removeAllRequests() {
 		Base.exec("DELETE FROM requests");

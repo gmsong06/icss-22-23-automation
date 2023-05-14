@@ -11,61 +11,62 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.util.concurrent.ExecutionError;
 
-public class GenerationStrategy {
-	public static void deleteHeader(Request request, int id) { // removes one header
-		List<RequestHeader> headers = RequestHeader.find("request_id = ?", request.getId());
-		for(int i = 0; i < headers.size(); i++) {
-			List<RequestHeader> temp = headers;
-			int headerIndex = i;
-			
-			temp.remove(headerIndex);
-			request.setIsGenerated(1);
-			request.setModification("removed header number " + (headerIndex + 1) + " from the request with id of " + id);
-
-			System.out.println("SENDING MODIFIED REQUEST # " + i);
-			sendModifiedRequest(request, temp);			
-			System.out.println("COMPLETED MODIFIED REQUEST # " + i);			
-			
-			for(RequestHeader h : temp) {
-				h.setRequestId(id);
-				h.save();
-			}
-		}
-	}
-
-	private static void sendModifiedRequest(Request request, List<RequestHeader> modifiedHeaders) {
+public abstract class GenerationStrategy {
+	
+	public abstract List<HttpHeaders> runStrategy(Request request);
+	
+	public void sendModifiedRequest(Request request) {
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+		
 		try {
-       		HttpRequest new_request = HTTP_TRANSPORT.createRequestFactory()
+       		HttpRequest sent_request = HTTP_TRANSPORT.createRequestFactory()
        				.buildRequest(
        						(String) request.getMethod(), 
        						new GenericUrl((String) request.getUrl()), 
        						null
        				);
+	
+       		
+       		List<HttpHeaders> new_headers = runStrategy(request);
+
+       		for(int i = 0; i < new_headers.size(); i++) {
+       			Request new_request = new Request();
+       			
+       			HttpResponse response = sent_request.setHeaders(new_headers.get(i)).executeAsync().get();
+       			
+       
+    			new_request.setResponseStatus(response.getStatusCode());
+    			String res = response.parseAsString();
+    							
+    			new_request.setIsGenerated(1);
+    			
+    			if(!res.equals(request.getResponseBody().toString())) {
+    				if((int) response.getStatusCode() < 400) {
+    					new_request.setIsGenerated(3);
+    				} else {
+    					new_request.setIsGenerated(2);
+    				}
+    			}
+    				
+    			new_request.setUrl(request.getUrl().toString());
+    			new_request.setFirstRecorded("timmy");
+    			new_request.setRequestBody(request.getRequestBody().toString());
+    			
+    			new_request.setResponseType(response.getContentType());
+    			new_request.setResponseBody(res);
+    			
+    			new_request.setMethod(request.getMethod().toString());
+    			new_request.setModification("modified header number " + i + " from request id " + request.getId().toString());
+    			
+    			response.disconnect();
+    			
+    			new_request.save(); // decide if we want this
+       		}
 			
-       		HttpHeaders new_headers = new HttpHeaders();
-			for(RequestHeader h: modifiedHeaders) {
-				new_headers.set((String) h.getName(), (String) h.getValue());
-			}
-
-			HttpResponse response = new_request.setHeaders(new_headers).executeAsync().get();
-			request.setResponseStatus(response.getStatusCode());
-			String res = response.parseAsString();
-
-			if(!res.equals(request.getResponseBody().toString())) {
-				if((int) response.getStatusCode() < 400) {
-					request.setIsGenerated(3);
-				} else {
-					request.setIsGenerated(2);
-				}
-			}
-
-			request.setResponseBody(res);
-			response.disconnect();
 			
 		} catch(Exception e) {
 			System.out.println(e.toString());
 		}
-		request.save();
+	
 	}
 }
