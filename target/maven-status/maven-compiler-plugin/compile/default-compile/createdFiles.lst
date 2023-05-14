@@ -1,7 +1,0 @@
-com\icssociety\automatedrequests\Main.class
-com\icssociety\automatedrequests\SendRequest.class
-com\icssociety\automatedrequests\SaveRequests.class
-com\icssociety\automatedrequests\RequestHeader.class
-com\icssociety\automatedrequests\ResponseHeader.class
-com\icssociety\automatedrequests\DBConnection.class
-com\icssociety\automatedrequests\Request.class
