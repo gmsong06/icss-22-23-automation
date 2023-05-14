@@ -20,7 +20,6 @@ public class GenerationStrategy {
 			
 			temp.remove(headerIndex);
 			request.setIsGenerated(1);
-			request.setId(null);
 			request.setModification("removed header number " + (headerIndex + 1) + " from the request with id of " + id);
 
 			System.out.println("SENDING MODIFIED REQUEST # " + i);
@@ -29,7 +28,6 @@ public class GenerationStrategy {
 			
 			for(RequestHeader h : temp) {
 				h.setRequestId(id);
-				h.setId(null);
 				h.save();
 			}
 		}
@@ -38,10 +36,16 @@ public class GenerationStrategy {
 	private static void sendModifiedRequest(Request request, List<RequestHeader> modifiedHeaders) {
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 		try {
-       		HttpRequest new_request = HTTP_TRANSPORT.createRequestFactory().buildRequest((String) request.getMethod(), new GenericUrl((String) request.getUrl()), null);
-			HttpHeaders new_headers = new HttpHeaders();
+       		HttpRequest new_request = HTTP_TRANSPORT.createRequestFactory()
+       				.buildRequest(
+       						(String) request.getMethod(), 
+       						new GenericUrl((String) request.getUrl()), 
+       						null
+       				);
+			
+       		HttpHeaders new_headers = new HttpHeaders();
 			for(RequestHeader h: modifiedHeaders) {
-				new_headers.set((String)h.getName(), (String) h.getValue());
+				new_headers.set((String) h.getName(), (String) h.getValue());
 			}
 
 			HttpResponse response = new_request.setHeaders(new_headers).executeAsync().get();
@@ -58,6 +62,7 @@ public class GenerationStrategy {
 
 			request.setResponseBody(res);
 			response.disconnect();
+			
 		} catch(Exception e) {
 			System.out.println(e.toString());
 		}
