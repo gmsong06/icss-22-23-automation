@@ -3,6 +3,8 @@ package com.icssociety.automatedrequests;
 
 import org.javalite.activejdbc.Base;
 
+//connects to the database, can be opened or closed
+
 public class DBConnection {
 	private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String URL = "jdbc:mysql://100.26.10.112:3306/ICSSData";

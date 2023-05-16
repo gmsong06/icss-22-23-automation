@@ -25,7 +25,7 @@ public class Main {
 		HarReader harReader = new HarReader();
 		Har har = harReader.readFromFile(new File("./data/Extempore.har"));
 
-		SaveRequests.save(har);
+		//SaveRequests.save(har);
 		
 		staticGenerationStrategies.put("DELETE_HEADER", new GenerationStrategyDeleteHeader());
 		

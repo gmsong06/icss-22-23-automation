@@ -10,6 +10,9 @@ import de.sstoehr.harreader.model.HarHeader;
 
 @Table("request_headers")
 public class RequestHeader extends Model { // the RequestHeader model that is stored in the "request_headers" table
+	//stores the headers of a specific request, has name, value, and id
+	//		Has getters and setters for all of them
+	
 	HarEntry har;
 	public RequestHeader() {}
 	public RequestHeader(HarHeader header, int requestId) {

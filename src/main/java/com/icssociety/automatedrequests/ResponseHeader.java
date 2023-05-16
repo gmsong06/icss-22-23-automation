@@ -8,6 +8,9 @@ import de.sstoehr.harreader.model.HarHeader;
 
 @Table("response_headers")
 public class ResponseHeader extends Model { // the ResponseHeader model that is stored in the "response-headers" table
+	//stores the headers of a specific response, has name, value, and id
+	//		Has getters and setters for all of them
+	
 	HarEntry har;
 	public ResponseHeader() {}
 	public ResponseHeader(HarHeader header, int requestId) {

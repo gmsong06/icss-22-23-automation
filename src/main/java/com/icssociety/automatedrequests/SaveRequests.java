@@ -13,6 +13,7 @@ import de.sstoehr.harreader.model.HarResponse;
 
 public class SaveRequests {
     public static void save(Har har) {
+    	//saves all responses + requests and their headers in the data base for a given HAR
     	List<HarEntry> entries = har.getLog().getEntries();
     	for(int i = 0; i < entries.size(); i++) {
 			HarEntry entry = entries.get(i);

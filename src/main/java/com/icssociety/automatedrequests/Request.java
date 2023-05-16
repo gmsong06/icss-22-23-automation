@@ -11,6 +11,10 @@ import de.sstoehr.harreader.model.HarResponse;
 
 @Table("requests")
 public class Request extends Model { // the Request model that is stored in the "requests" table
+	
+	//contains a har file, a request, a response, and who recorded it. 
+	//likewise, has string entries for url, method, response and request body and type, generation status, modification status. 
+	//		Has getters and setters for all 
 	HarEntry har;
 	HarRequest request;
 	HarResponse response;
