@@ -30,7 +30,14 @@ public class Main {
 		staticGenerationStrategies.put("DELETE_HEADER", new GenerationStrategyDeleteHeader());
 		
 		System.out.println("STARTED MODIFYING");
-		generateModifiedRequests(Request.findById(18), 18);
+		HashMap<String, String> uniqueRequests = new HashMap<>();
+		for(int i = 1; i < Base.count("requests") + 1; i++) {
+			Request req = Request.findById(i);
+			if(!(uniqueRequests.keySet().contains((String) req.getUrl()) && uniqueRequests.get((String) req.getUrl()) != (String) req.getMethod())) {
+				generateModifiedRequests(req, i);
+				uniqueRequests.put((String) req.getUrl(), (String) req.getMethod());
+			} 
+		}
 		System.out.println("STOPPED MODIFYING");
 		
 		DBConnection.close();

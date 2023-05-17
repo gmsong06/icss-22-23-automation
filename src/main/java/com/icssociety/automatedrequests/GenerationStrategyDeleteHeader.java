@@ -26,7 +26,7 @@ public class GenerationStrategyDeleteHeader extends GenerationStrategy {
 			//create an HttpHeaders, then set each of the header to be equal to the modified headers list (which is stored in temp)
 			HttpHeaders new_headers = new HttpHeaders();
 			for(RequestHeader h : temp) {
-				new_headers.set((String) h.getName(), (String) h.getValue());
+				new_headers.set((String) h.getName(), (Object) h.getValue());
 			}
 			
 			//add the new headers to the final list
