@@ -21,7 +21,7 @@ public class GenerationStrategyDeleteHeader extends GenerationStrategy {
 			HttpHeaders new_headers = new HttpHeaders();
 			
 			for(RequestHeader h : temp) {
-				new_headers.set((String) h.getName(), (String) h.getValue());
+				new_headers.set((String) h.getName(), (Object) h.getValue());
 			}
 			
 			list_headers.add(new_headers);
