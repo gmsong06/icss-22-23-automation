@@ -8,7 +8,7 @@ import com.google.api.client.http.HttpHeaders;
 public class GenerationStrategyDeleteHeader extends GenerationStrategy {
 
 	@Override
-	public List<HttpHeaders> runStrategy(Request request) {
+	public List<HttpHeaders> modifyHeaders(Request request) {
 		List<RequestHeader> headers = RequestHeader.find("request_id = ?", request.getId());
 		
 		List<HttpHeaders> list_headers = new ArrayList<>();

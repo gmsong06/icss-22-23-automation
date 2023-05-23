@@ -1,5 +1,6 @@
 package com.icssociety.automatedrequests;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -13,7 +14,25 @@ import com.google.common.util.concurrent.ExecutionError;
 
 public abstract class GenerationStrategy {
 	
-	public abstract List<HttpHeaders> runStrategy(Request request);
+	public String modifyUrl(Request request) {
+		return request.getUrl().toString();
+	}
+
+	public List<HttpHeaders> modifyHeaders(Request request) {
+		List<HttpHeaders> unmodifiedHeaders = new ArrayList<>();
+		List<RequestHeader> headers = RequestHeader.find("request_id = ?", request.getId());
+		HttpHeaders httpHeaders = new HttpHeaders();
+		for(RequestHeader h : headers) {
+			String name = (String) h.getName();
+			if(name.equalsIgnoreCase("content-length")) {
+				httpHeaders.setContentLength(Long.parseLong((String) h.getValue()));
+			} else {
+				httpHeaders.set(name, (Object) h.getValue());
+			}
+		}
+		unmodifiedHeaders.add(httpHeaders);
+		return unmodifiedHeaders;
+	}
 	
 	public void sendModifiedRequest(Request request) {
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -22,12 +41,12 @@ public abstract class GenerationStrategy {
        		HttpRequest sent_request = HTTP_TRANSPORT.createRequestFactory()
        				.buildRequest(
        						(String) request.getMethod(), 
-       						new GenericUrl((String) request.getUrl()), 
+       						new GenericUrl(modifyUrl(request)), 
        						null
        				);
 	
        		
-       		List<HttpHeaders> new_headers = runStrategy(request);
+       		List<HttpHeaders> new_headers = modifyHeaders(request);
 
        		for(int i = 0; i < new_headers.size(); i++) {
        			Request new_request = new Request();
@@ -48,7 +67,7 @@ public abstract class GenerationStrategy {
     				}
     			}
     				
-    			new_request.setUrl(request.getUrl().toString());
+    			new_request.setUrl(modifyUrl(request));
     			new_request.setFirstRecorded("timmy");
     			new_request.setRequestBody(request.getRequestBody().toString());
     			
