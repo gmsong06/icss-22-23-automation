@@ -14,8 +14,10 @@ import com.google.common.util.concurrent.ExecutionError;
 
 public class GenerationStrategy {
 	
-	public String modifyUrl(Request request) {
-		return request.getUrl().toString();
+	public List<String> modifyUrl(Request request) {
+		List<String> unmodifiedUrl = new ArrayList<>();
+		unmodifiedUrl.add(request.getUrl().toString());
+		return unmodifiedUrl;
 	}
 
 	public List<HttpHeaders> modifyHeaders(Request request) {
@@ -38,10 +40,11 @@ public class GenerationStrategy {
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 		
 		try {
-       		HttpRequest sent_request = HTTP_TRANSPORT.createRequestFactory()
+			for(String url: modifyUrl(request)) {
+				HttpRequest sent_request = HTTP_TRANSPORT.createRequestFactory()
        				.buildRequest(
        						(String) request.getMethod(), 
-       						new GenericUrl(modifyUrl(request)), 
+       						new GenericUrl(url), 
        						null
        				);
 	
@@ -67,7 +70,7 @@ public class GenerationStrategy {
     				}
     			}
     				
-    			new_request.setUrl(modifyUrl(request));
+    			new_request.setUrl(url);
     			new_request.setFirstRecorded("timmy");
     			new_request.setRequestBody(request.getRequestBody().toString());
     			
@@ -81,7 +84,7 @@ public class GenerationStrategy {
     			
     			new_request.save(); // decide if we want this
        		}
-			
+			}
 			
 		} catch(Exception e) {
 			System.out.println(e.toString());
