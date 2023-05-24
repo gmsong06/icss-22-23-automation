@@ -28,6 +28,7 @@ public class Main {
 		SaveRequests.save(har);
 		
 		staticGenerationStrategies.put("DELETE_HEADER", new GenerationStrategyDeleteHeader());
+		staticGenerationStrategies.put("ADD_LETTER", new GenerationStrategyAddLetter());
 		
 		System.out.println("STARTED MODIFYING");
 		HashMap<String, String> uniqueRequests = new HashMap<>();

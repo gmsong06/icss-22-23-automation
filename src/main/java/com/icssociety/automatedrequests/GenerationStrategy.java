@@ -12,7 +12,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.util.concurrent.ExecutionError;
 
-public abstract class GenerationStrategy {
+public class GenerationStrategy {
 	
 	public String modifyUrl(Request request) {
 		return request.getUrl().toString();
