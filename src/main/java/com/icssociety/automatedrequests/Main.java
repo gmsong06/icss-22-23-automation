@@ -23,12 +23,13 @@ public class Main {
 		removeAllResponseHeaders();
 		
 		HarReader harReader = new HarReader();
-		Har har = harReader.readFromFile(new File("./data/Extempore.har"));
+		Har har = harReader.readFromFile(new File("./data/einstein-Bagels.har"));
 
 		SaveRequests.save(har);
 		
 		staticGenerationStrategies.put("DELETE_HEADER", new GenerationStrategyDeleteHeader());
 		staticGenerationStrategies.put("ADD_LETTER", new GenerationStrategyAddLetter());
+		staticGenerationStrategies.put("ADD_LETTER", new GenerationStrategyIterateUrlNumbers());
 		
 		System.out.println("STARTED MODIFYING");
 		HashMap<String, String> uniqueRequests = new HashMap<>();
