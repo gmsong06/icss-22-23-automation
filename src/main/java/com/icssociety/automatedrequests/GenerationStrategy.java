@@ -1,7 +1,9 @@
 package com.icssociety.automatedrequests;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import com.google.api.client.http.GenericUrl;
@@ -20,8 +22,8 @@ public class GenerationStrategy {
 		return unmodifiedUrl;
 	}
 
-	public List<HttpHeaders> modifyHeaders(Request request) {
-		List<HttpHeaders> unmodifiedHeaders = new ArrayList<>();
+	public Map<HttpHeaders, String> modifyHeaders(Request request) {
+		Map<HttpHeaders, String> unmodifiedHeaders = new HashMap<>();
 		List<RequestHeader> headers = RequestHeader.find("request_id = ?", request.getId());
 		HttpHeaders httpHeaders = new HttpHeaders();
 		for(RequestHeader h : headers) {
@@ -32,7 +34,7 @@ public class GenerationStrategy {
 				httpHeaders.set(name, (Object) h.getValue());
 			}
 		}
-		unmodifiedHeaders.add(httpHeaders);
+		unmodifiedHeaders.put(httpHeaders, "Did not modify headers");
 		return unmodifiedHeaders;
 	}
 	
@@ -49,7 +51,8 @@ public class GenerationStrategy {
        				);
 	
        		
-       		List<HttpHeaders> new_headers = modifyHeaders(request);
+			Map<HttpHeaders, String> modified_headers = modifyHeaders(request);
+       		List<HttpHeaders> new_headers = new ArrayList<>(modified_headers.keySet());
 
        		for(int i = 0; i < new_headers.size(); i++) {
        			Request new_request = new Request();
@@ -78,7 +81,7 @@ public class GenerationStrategy {
     			new_request.setResponseBody(res);
     			
     			new_request.setMethod(request.getMethod().toString());
-    			new_request.setModification("modified header number " + i + " from request id " + request.getId().toString());
+    			new_request.setModification(modified_headers.get(new_headers.get(i)));
     			
     			response.disconnect();
     			

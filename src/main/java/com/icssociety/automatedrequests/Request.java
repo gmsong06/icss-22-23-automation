@@ -1,10 +1,7 @@
 package com.icssociety.automatedrequests;
 
-import java.util.List;
-
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
-import de.sstoehr.harreader.model.Har;
 import de.sstoehr.harreader.model.HarEntry;
 import de.sstoehr.harreader.model.HarRequest;
 import de.sstoehr.harreader.model.HarResponse;
@@ -86,6 +83,10 @@ public class Request extends Model { // the Request model that is stored in the 
 	
 	public void setModification(String modification) {
 		this.set("modification", modification);
+	}
+
+	public void setUrlModification(String modification) {
+		this.set("url_modification", modification);
 	}
 	
 	public Object getMethod() {
