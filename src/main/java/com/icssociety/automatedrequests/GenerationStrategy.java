@@ -1,5 +1,6 @@
 package com.icssociety.automatedrequests;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -11,25 +12,45 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.util.concurrent.ExecutionError;
 
-public abstract class GenerationStrategy {
+public class GenerationStrategy {
 	
-	public abstract List<HttpHeaders> runStrategy(Request request);
+	public List<String> modifyUrl(Request request) {
+		List<String> unmodifiedUrl = new ArrayList<>();
+		unmodifiedUrl.add(request.getUrl().toString());
+		return unmodifiedUrl;
+	}
+
+	public List<HttpHeaders> modifyHeaders(Request request) {
+		List<HttpHeaders> unmodifiedHeaders = new ArrayList<>();
+		List<RequestHeader> headers = RequestHeader.find("request_id = ?", request.getId());
+		HttpHeaders httpHeaders = new HttpHeaders();
+		for(RequestHeader h : headers) {
+			String name = (String) h.getName();
+			if(name.equalsIgnoreCase("content-length")) {
+				httpHeaders.setContentLength(Long.parseLong((String) h.getValue()));
+			} else {
+				httpHeaders.set(name, (Object) h.getValue());
+			}
+		}
+		unmodifiedHeaders.add(httpHeaders);
+		return unmodifiedHeaders;
+	}
 	
 	public void sendModifiedRequest(Request request) {
 		//setting up + building HTTP Requests
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 		
-		try { 
-       		HttpRequest sent_request = HTTP_TRANSPORT.createRequestFactory()
+		try {
+			for(String url: modifyUrl(request)) {
+				HttpRequest sent_request = HTTP_TRANSPORT.createRequestFactory()
        				.buildRequest(
        						(String) request.getMethod(), 
-       						new GenericUrl((String) request.getUrl()), 
+       						new GenericUrl(url), 
        						null
        				);
 	
        		
-       		//Gets a list of modified headers which were passed by the generation strategy used.
-       		List<HttpHeaders> new_headers = runStrategy(request);
+       		List<HttpHeaders> new_headers = modifyHeaders(request);
 
        		//loop through each modified header
        		for(int i = 0; i < new_headers.size(); i++) {
@@ -57,8 +78,7 @@ public abstract class GenerationStrategy {
     				}
     			}
     				
-    			//Update the new request to include all the same parameters of the old request, modifying some ("timmy")
-    			new_request.setUrl(request.getUrl().toString());
+    			new_request.setUrl(url);
     			new_request.setFirstRecorded("timmy");
     			new_request.setRequestBody(request.getRequestBody().toString());
     			
@@ -73,7 +93,7 @@ public abstract class GenerationStrategy {
     			//saving the new request in the data base
     			new_request.save(); // decide if we want this
        		}
-			
+			}
 			
 		} catch(Exception e) {
 			System.out.println(e.toString());
