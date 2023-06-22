@@ -37,6 +37,12 @@ public class GenerationStrategy {
 		unmodifiedHeaders.put(httpHeaders, "Did not modify headers");
 		return unmodifiedHeaders;
 	}
+
+	public Map<String, String> modifyBody(Request request) {
+		Map<String, String> unmodifiedBody = new HashMap<>();
+		unmodifiedBody.put(request.getRequestBody().toString(), "Did not modify body");
+		return unmodifiedBody;
+	}
 	
 	public void sendModifiedRequest(Request request) {
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -52,40 +58,43 @@ public class GenerationStrategy {
 	
        		
 			Map<HttpHeaders, String> modified_headers = modifyHeaders(request);
+			Map<String, String> modified_bodies = modifyBody(request);
        		List<HttpHeaders> new_headers = new ArrayList<>(modified_headers.keySet());
 
        		for(int i = 0; i < new_headers.size(); i++) {
-       			Request new_request = new Request();
+				for(String body: modified_bodies.keySet()) {
+					Request new_request = new Request();
        			
-       			HttpResponse response = sent_request.setHeaders(new_headers.get(i)).executeAsync().get();
-       			
-       
-    			new_request.setResponseStatus(response.getStatusCode());
-    			String res = response.parseAsString();
-    							
-    			new_request.setIsGenerated(1);
-    			
-    			if(!res.equals(request.getResponseBody().toString())) {
-    				if((int) response.getStatusCode() < 400) {
-    					new_request.setIsGenerated(3);
-    				} else {
-    					new_request.setIsGenerated(2);
-    				}
-    			}
-    				
-    			new_request.setUrl(url);
-    			new_request.setFirstRecorded("timmy");
-    			new_request.setRequestBody(request.getRequestBody().toString());
-    			
-    			new_request.setResponseType(response.getContentType());
-    			new_request.setResponseBody(res);
-    			
-    			new_request.setMethod(request.getMethod().toString());
-    			new_request.setModification(modified_headers.get(new_headers.get(i)));
-    			
-    			response.disconnect();
-    			
-    			new_request.save(); // decide if we want this
+					HttpResponse response = sent_request.setHeaders(new_headers.get(i)).executeAsync().get();
+					
+		
+					new_request.setResponseStatus(response.getStatusCode());
+					String res = response.parseAsString();
+									
+					new_request.setIsGenerated(1);
+					
+					if(!res.equals(request.getResponseBody().toString())) {
+						if((int) response.getStatusCode() < 400) {
+							new_request.setIsGenerated(3);
+						} else {
+							new_request.setIsGenerated(2);
+						}
+					}
+
+					new_request.setUrl(url);
+					new_request.setFirstRecorded("timmy");
+					new_request.setRequestBody(body);
+					
+					new_request.setResponseType(response.getContentType());
+					new_request.setResponseBody(res);
+					
+					new_request.setMethod(request.getMethod().toString());
+					new_request.setModification(modified_headers.get(new_headers.get(i)));
+					
+					response.disconnect();
+					
+					new_request.save(); // decide if we want this
+				}
        		}
 			}
 			
