@@ -9,7 +9,6 @@ import java.io.*;
 import de.sstoehr.harreader.HarReader;
 import de.sstoehr.harreader.HarReaderException;
 import de.sstoehr.harreader.model.Har;
-import de.sstoehr.harreader.model.HarEntry;
 
 public class Main {
 	
@@ -29,16 +28,18 @@ public class Main {
 		
 		staticGenerationStrategies.put("DELETE_HEADER", new GenerationStrategyDeleteHeader());
 		staticGenerationStrategies.put("ADD_LETTER", new GenerationStrategyAddLetter());
+		staticGenerationStrategies.put("ITERATE_URL", new GenerationStrategyIterateUrlNumbers());
+		staticGenerationStrategies.put("ITERATE_USER_ID", new GenerationStrategyIterateUserId());
+		staticGenerationStrategies.put("APPEND_BODY", new GenerationStrategyAppendJSON());
+		staticGenerationStrategies.put("DELETE_BODY", new GenerationStrategyDeleteBody());
 		
 		System.out.println("STARTED MODIFYING");
-		HashMap<String, String> uniqueRequests = new HashMap<>();
 		for(int i = 1; i < Base.count("requests") + 1; i++) {
 			Request req = Request.findById(i);
-			if(!(uniqueRequests.keySet().contains((String) req.getUrl()) && uniqueRequests.get((String) req.getUrl()) != (String) req.getMethod())) {
-				generateModifiedRequests(req, i);
-				uniqueRequests.put((String) req.getUrl(), (String) req.getMethod());
-			} 
-		}
+				if(Integer.valueOf(req.getIsGenerated().toString()) == 0) {
+					generateModifiedRequests(req, i);
+				}
+		 }
 		System.out.println("STOPPED MODIFYING");
 		
 		DBConnection.close();

@@ -1,7 +1,8 @@
 package com.icssociety.automatedrequests;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.api.client.http.HttpHeaders;
 
@@ -10,10 +11,10 @@ public class GenerationStrategyDeleteHeader extends GenerationStrategy {
 	
 	//generation strategy which removes each header, returning a list of headers, each entry having one header removed from the original one
 	@Override
-	public List<HttpHeaders> modifyHeaders(Request request) {
+	public Map<HttpHeaders, String> modifyHeaders(Request request) {
 		List<RequestHeader> headers = RequestHeader.find("request_id = ?", request.getId());
-		//make a list of http headers, which modified headers will be added to
-		List<HttpHeaders> list_headers = new ArrayList<>();
+		
+		Map<HttpHeaders, String> list_headers = new HashMap<>();
 		
 		//loop through all the headers
 		for(int i = 0; i < headers.size(); i++) {
@@ -33,8 +34,8 @@ public class GenerationStrategyDeleteHeader extends GenerationStrategy {
 				}
 			}
 			
-			//add the new headers to the final list
-			list_headers.add(new_headers);
+			list_headers.put(new_headers, "removed header number " + i + " from request id " + request.getId().toString());
+			
 		}
 		
 		return list_headers; 

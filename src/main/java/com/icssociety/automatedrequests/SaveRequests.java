@@ -2,14 +2,9 @@ package com.icssociety.automatedrequests;
 
 import java.math.BigInteger;
 import java.util.*;
-
-import de.sstoehr.harreader.HarReader;
-import de.sstoehr.harreader.HarReaderException;
 import de.sstoehr.harreader.model.Har;
 import de.sstoehr.harreader.model.HarEntry;
 import de.sstoehr.harreader.model.HarHeader;
-import de.sstoehr.harreader.model.HarRequest;
-import de.sstoehr.harreader.model.HarResponse;
 
 public class SaveRequests {
     public static void save(Har har) {

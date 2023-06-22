@@ -1,7 +1,5 @@
 package com.icssociety.automatedrequests;
 
-import java.util.List;
-
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 

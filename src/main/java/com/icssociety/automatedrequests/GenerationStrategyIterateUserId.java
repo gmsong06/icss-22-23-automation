@@ -1,7 +1,8 @@
 package com.icssociety.automatedrequests;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.api.client.http.HttpHeaders;
 
@@ -10,14 +11,15 @@ public class GenerationStrategyIterateUserId extends GenerationStrategy {
 	
 	//generation strategy which removes each header, returning a list of headers, each entry having one header removed from the original one
 	@Override
-	public List<HttpHeaders> modifyHeaders(Request request) {
+	public Map<HttpHeaders, String> modifyHeaders(Request request) {
 		//get a list of all the headers
 		List<RequestHeader> headers = RequestHeader.find("request_id = ?", request.getId());
 		//make a list of http headers, which modified headers will be added to
-		List<HttpHeaders> list_headers = new ArrayList<>();
+		Map<HttpHeaders, String> list_headers = new HashMap<>();
 		
 		//loop through all the headers
-		for(RequestHeader tempHeader : headers) { //loops through each header in request
+		for(int i = 0; i < headers.size(); i++) { //loops through each header in request
+			RequestHeader tempHeader = headers.get(i);
 			System.out.println(tempHeader.getName().toString() + " " + tempHeader.getId().toString());
 			if(tempHeader.getName().toString().equalsIgnoreCase("id") || tempHeader.getName().toString().equalsIgnoreCase("userid")) { //checks if header name is id or userid
 				
@@ -35,7 +37,7 @@ public class GenerationStrategyIterateUserId extends GenerationStrategy {
 					}
 					
 					new_headers.set((String) tempHeader.getName(), (Object)s);
-					list_headers.add(new_headers);
+					list_headers.put(new_headers, "iterated header number " + i + " by " + j + " from request id " + request.getId().toString());
 				}
 			}	
 		
