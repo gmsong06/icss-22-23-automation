@@ -88,6 +88,10 @@ public class Request extends Model { // the Request model that is stored in the 
 	public void setUrlModification(String modification) {
 		this.set("url_modification", modification);
 	}
+
+	public void setBodyModification(String modification) {
+		this.set("body_modification", modification);
+	}
 	
 	public Object getMethod() {
 		return this.get("method");

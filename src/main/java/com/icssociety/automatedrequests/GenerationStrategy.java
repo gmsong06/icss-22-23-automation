@@ -1,10 +1,8 @@
 package com.icssociety.automatedrequests;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
@@ -12,7 +10,6 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.common.util.concurrent.ExecutionError;
 
 public class GenerationStrategy {
 	
@@ -46,7 +43,7 @@ public class GenerationStrategy {
 	
 	public void sendModifiedRequest(Request request) {
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-		
+	
 		try {
 			for(String url: modifyUrl(request)) {
 				HttpRequest sent_request = HTTP_TRANSPORT.createRequestFactory()
@@ -84,6 +81,7 @@ public class GenerationStrategy {
 					new_request.setUrl(url);
 					new_request.setFirstRecorded("timmy");
 					new_request.setRequestBody(body);
+					new_request.setBodyModification(modified_bodies.get(body));
 					
 					new_request.setResponseType(response.getContentType());
 					new_request.setResponseBody(res);
