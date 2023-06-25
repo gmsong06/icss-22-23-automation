@@ -27,7 +27,7 @@ public class Main {
 		SaveRequests.save(har);
 		
 		staticGenerationStrategies.put("DELETE_HEADER", new GenerationStrategyDeleteHeader());
-		staticGenerationStrategies.put("ADD_LETTER", new GenerationStrategyAddLetter());
+		staticGenerationStrategies.put("ADD_STRING", new GenerationStrategyAddString());
 		staticGenerationStrategies.put("ITERATE_URL", new GenerationStrategyIterateUrlNumbers());
 		staticGenerationStrategies.put("ITERATE_USER_ID", new GenerationStrategyIterateUserId());
 		staticGenerationStrategies.put("APPEND_BODY", new GenerationStrategyAppendJSON());
