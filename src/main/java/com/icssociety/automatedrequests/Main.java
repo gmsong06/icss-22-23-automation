@@ -32,6 +32,7 @@ public class Main {
 		staticGenerationStrategies.put("ITERATE_USER_ID", new GenerationStrategyIterateUserId());
 		staticGenerationStrategies.put("APPEND_BODY", new GenerationStrategyAppendJSON());
 		staticGenerationStrategies.put("DELETE_BODY", new GenerationStrategyDeleteBody());
+		staticGenerationStrategies.put("ADD_RANDOM_STRING", new GenerationStrategyAddRandomString());
 		
 		System.out.println("STARTED MODIFYING");
 		for(int i = 1; i < Base.count("requests") + 1; i++) {
