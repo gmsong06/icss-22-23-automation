@@ -40,6 +40,10 @@ public class GenerationStrategyDeleteHeader extends GenerationStrategy {
 		
 		return list_headers; 
 	}
+
+	public String getStrategyDescription () {
+		return "Removing a header at a time from request";
+	}
 	
 	public GenerationStrategyDeleteHeader() {
 		super();

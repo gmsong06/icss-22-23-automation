@@ -45,7 +45,11 @@ public class GenerationStrategyAddString extends GenerationStrategy {
 		
 		return list_headers; 
 	}
-	
+
+	public String getStrategyDescription () {
+		return "Adding string a to header of each request";
+	}
+
 	public GenerationStrategyAddString() {
 		super();
 	}

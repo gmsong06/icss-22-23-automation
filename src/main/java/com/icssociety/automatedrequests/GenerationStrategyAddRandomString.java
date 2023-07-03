@@ -20,6 +20,10 @@ public class GenerationStrategyAddRandomString extends GenerationStrategy {
 		
 		return modifiedBody;
 	}
+
+	public String getStrategyDescription () {
+		return "Adding random string of size 100 to each request";
+	}
 	
 	public GenerationStrategyAddRandomString() {
 		super();

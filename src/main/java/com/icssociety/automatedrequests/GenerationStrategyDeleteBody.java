@@ -10,6 +10,10 @@ public class GenerationStrategyDeleteBody extends GenerationStrategy {
         modifiedBody.put("", "deleted JSON Body from request id " + request.getId().toString());
         return modifiedBody;
     }
+
+    public String getStrategyDescription () {
+		return "Deleting request body";
+	}
     
     public GenerationStrategyDeleteBody() {
 		super();

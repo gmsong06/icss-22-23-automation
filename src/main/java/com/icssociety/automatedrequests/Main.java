@@ -35,27 +35,33 @@ public class Main {
 		staticGenerationStrategies.put("ADD_RANDOM_STRING", new GenerationStrategyAddRandomString());
 		
 		System.out.println("STARTED MODIFYING");
-		for(int i = 1; i < Base.count("requests") + 1; i++) {
-			Request req = Request.findById(i);
+		for(String str: staticGenerationStrategies.keySet()) {
+			GenerationStrategy strategy = staticGenerationStrategies.get(str);
+			for(int i = 1; i < Base.count("requests") + 1; i++) {
+				Request req = Request.findById(i);
 				if(Integer.valueOf(req.getIsGenerated().toString()) == 0) {
-					generateModifiedRequests(req, i);
+					strategy.sendModifiedRequest(req);
 				}
-		 }
+			}
+
+			System.out.print(strategy.getStrategyDescription() + " generated ");
+			System.out.print(strategy.getUnsuccessfulRequests() + " unsuccessful requests and ");
+			System.out.print(strategy.getSuccessfulRequests() + " successful requests with ");
+			System.out.print(strategy.getModifiedResponses() + " modified responses and ");
+			System.out.println(strategy.getUnmodifiedResponses() + " unmodified responses");
+			System.out.println("Success Rate: " + 100 * strategy.getSuccessfulRequests()/(strategy.getSuccessfulRequests() + strategy.getUnsuccessfulRequests()) + "%");
+			if(strategy.getSuccessfulRequests() > 0) {
+				System.out.println("Modification Rate: " + 100 * strategy.getModifiedResponses()/(strategy.getModifiedResponses() + strategy.getUnmodifiedResponses()) + "%");
+			}
+
+		}
+
 		System.out.println("STOPPED MODIFYING");
 		
 		DBConnection.close();
 		
 	}
 	
-	public static void generateModifiedRequests(Request request, int id) {
-		for(String i : staticGenerationStrategies.keySet()) {
-			GenerationStrategy strategy = staticGenerationStrategies.get(i);
-			
-			strategy.sendModifiedRequest(request);
-			
-		}
-
-	}
 	public static void removeAllRequests() {
 		Base.exec("DELETE FROM requests");
 		Base.exec("ALTER TABLE requests AUTO_INCREMENT = 1");

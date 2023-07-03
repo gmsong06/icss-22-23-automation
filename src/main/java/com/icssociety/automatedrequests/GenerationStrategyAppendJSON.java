@@ -24,4 +24,8 @@ public class GenerationStrategyAppendJSON extends GenerationStrategy {
         return modified_bodies;
     }
 
+    public String getStrategyDescription () {
+		return "Appending JSON pair apple:banana to request body";
+	}
+
 }

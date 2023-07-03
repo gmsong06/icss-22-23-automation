@@ -20,7 +20,7 @@ public class GenerationStrategyIterateUserId extends GenerationStrategy {
 		//loop through all the headers
 		for(int i = 0; i < headers.size(); i++) { //loops through each header in request
 			RequestHeader tempHeader = headers.get(i);
-			System.out.println(tempHeader.getName().toString() + " " + tempHeader.getId().toString());
+			// System.out.println(tempHeader.getName().toString() + " " + tempHeader.getId().toString());
 			if(tempHeader.getName().toString().equalsIgnoreCase("id") || tempHeader.getName().toString().equalsIgnoreCase("userid")) { //checks if header name is id or userid
 				
 				char[] idHeader = tempHeader.getValue().toString().toCharArray(); //converts the header to a char array of the values in the id
@@ -44,6 +44,10 @@ public class GenerationStrategyIterateUserId extends GenerationStrategy {
 		}
 		return list_headers;	
 
+	}
+
+	public String getStrategyDescription () {
+		return "Iterating User ID";
 	}
 	
 	public GenerationStrategyIterateUserId() {

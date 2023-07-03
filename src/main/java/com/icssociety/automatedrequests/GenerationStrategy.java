@@ -11,7 +11,13 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
-public class GenerationStrategy {
+public abstract class GenerationStrategy {
+
+	public abstract String getStrategyDescription();
+	private int successfulRequests = 0;
+	private int unsuccessfulRequests = 0;
+	private int modifiedResponses = 0;
+	private int unmodifiedResponses = 0;
 	
 	public List<String> modifyUrl(Request request) {
 		List<String> unmodifiedUrl = new ArrayList<>();
@@ -42,6 +48,7 @@ public class GenerationStrategy {
 	}
 	
 	public void sendModifiedRequest(Request request) {
+
 		//setting up + building HTTP Requests
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	
@@ -75,10 +82,11 @@ public class GenerationStrategy {
 					if(!res.equals(request.getResponseBody().toString())) {
 						if((int) response.getStatusCode() < 400) {
 							new_request.setIsGenerated(3);
+							modifiedResponses ++;
 						} else {
 							new_request.setIsGenerated(2);
 						}
-					}
+					} else unmodifiedResponses++;
 
 					new_request.setUrl(url);
 					new_request.setFirstRecorded("timmy");
@@ -92,15 +100,37 @@ public class GenerationStrategy {
 					new_request.setModification(modified_headers.get(new_headers.get(i)));
 					
 					response.disconnect();
-					
+					successfulRequests++;
 					new_request.save(); // decide if we want this
 				}
        		}
 			}
 			
 		} catch(Exception e) {
-			System.out.println(e.toString());
+			// System.out.println(e.toString());
+			unsuccessfulRequests++;
 		}
 	
+		// System.out.println(this.getStrategyDescription() + " generated: ");
+		// System.out.print(unsuccessfulRequests + " unsuccessful requests and ");
+		// System.out.print(successfulRequests + "successful requests with ");
+		// System.out.print(modifiedResponses + "modified responses and ");
+		// System.out.print(unmodifiedResponses + "unmodified responses");
+	}
+
+	public int getSuccessfulRequests() {
+		return successfulRequests;
+	}
+
+	public int getUnsuccessfulRequests() {
+		return unsuccessfulRequests;
+	}
+
+	public int getModifiedResponses() {
+		return modifiedResponses;
+	}
+
+	public int getUnmodifiedResponses() {
+		return unmodifiedResponses;
 	}
 }

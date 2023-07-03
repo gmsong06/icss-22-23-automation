@@ -47,4 +47,12 @@ public class GenerationStrategyIterateUrlNumbers extends GenerationStrategy {
         
         return modified_urls;
     }
+
+    public String getStrategyDescription () {
+		return "Iterating URL parameters";
+	}
+
+    public GenerationStrategyIterateUrlNumbers() {
+		super();
+	}
 }
