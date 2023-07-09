@@ -1,0 +1,5 @@
+Iterating User ID generated 1 unsuccessful requests and 0 successful requests with 0 modified responses and 0 unmodified responses
+Success Rate: 0%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+

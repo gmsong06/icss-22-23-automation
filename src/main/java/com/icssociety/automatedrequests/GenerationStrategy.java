@@ -1,15 +1,20 @@
 package com.icssociety.automatedrequests;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import java.util.regex.*;
 
 public abstract class GenerationStrategy {
 
@@ -18,6 +23,10 @@ public abstract class GenerationStrategy {
 	private int unsuccessfulRequests = 0;
 	private int modifiedResponses = 0;
 	private int unmodifiedResponses = 0;
+	private int numSensitiveData = 0;
+	private int numSimilarData = 0;
+	private HashMap<Integer, Integer> statusCodes = new HashMap<>();
+
 	
 	public List<String> modifyUrl(Request request) {
 		List<String> unmodifiedUrl = new ArrayList<>();
@@ -60,7 +69,7 @@ public abstract class GenerationStrategy {
        						new GenericUrl(url), 
        						null
        				);
-	
+
        		
 			Map<HttpHeaders, String> modified_headers = modifyHeaders(request);
 			Map<String, String> modified_bodies = modifyBody(request);
@@ -75,14 +84,18 @@ public abstract class GenerationStrategy {
 					
 		
 					new_request.setResponseStatus(response.getStatusCode());
+					if(statusCodes.containsKey(200)) statusCodes.replace(200, statusCodes.get(200), statusCodes.get(200)+1);
+					else statusCodes.put(200, 0);
+
 					String res = response.parseAsString();
-									
 					new_request.setIsGenerated(1);
 					
 					if(!res.equals(request.getResponseBody().toString())) {
+
 						if((int) response.getStatusCode() < 400) {
 							new_request.setIsGenerated(3);
 							modifiedResponses ++;
+						
 						} else {
 							new_request.setIsGenerated(2);
 						}
@@ -99,18 +112,33 @@ public abstract class GenerationStrategy {
 					new_request.setMethod(request.getMethod().toString());
 					new_request.setModification(modified_headers.get(new_headers.get(i)));
 					
+					//if the modified response body contains sensitive data using regexs
+					if(containsData(res)) numSensitiveData++;
+					//if the unmodified request response body is similar to the modified request response body
+					if(is90PercentSimilar(request.getResponseBody().toString(), res)) numSimilarData++;
+
 					response.disconnect();
 					successfulRequests++;
 					new_request.save(); // decide if we want this
 				}
        		}
 			}
+
+			} catch(ExecutionException e) {
+				Throwable cause = e.getCause();
+    
+   				if (cause instanceof HttpResponseException) {
+       				int responseCode = ((HttpResponseException) cause).getStatusCode();
+					
+					if(!statusCodes.containsKey(responseCode)) statusCodes.put(responseCode, 1);
+					else statusCodes.replace(responseCode, statusCodes.get(responseCode), statusCodes.get(responseCode)+1);
+				}
+				unsuccessfulRequests++;
+			} catch(Exception e){
+				unsuccessfulRequests++;
+			}
 			
-		} catch(Exception e) {
-			// System.out.println(e.toString());
-			unsuccessfulRequests++;
-		}
-	
+		
 		// System.out.println(this.getStrategyDescription() + " generated: ");
 		// System.out.print(unsuccessfulRequests + " unsuccessful requests and ");
 		// System.out.print(successfulRequests + "successful requests with ");
@@ -132,5 +160,71 @@ public abstract class GenerationStrategy {
 
 	public int getUnmodifiedResponses() {
 		return unmodifiedResponses;
+	}
+
+	public int getSensitiveData(){
+		return numSensitiveData;
+	}
+
+	public int getSimilarData(){
+		return numSimilarData;
+	}
+
+	public HashMap<Integer,Integer> getStatusCodes(){
+		return statusCodes;
+	}
+
+
+	public static boolean containsData(String input) {
+        String phoneRegex = "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b";
+        String emailRegex = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b";
+        String addressRegex = "\\b\\d+\\s+([A-Za-z]+\\s+){1,5}(Avenue|St|Street|Rd|Road|Lane|Blvd|Boulevard)\\b";
+        String ssnRegex = "\\b\\d{3}-\\d{2}-\\d{4}\\b";
+        String nameRegex = "\\b[A-Z][a-z]+\\s[A-Z][a-z]+\\b";
+		String infoRegex = "\\b(username|role|position|userid|id|name|firstName|lastName)\\b";
+
+        String combinedRegex = phoneRegex + "|" + emailRegex + "|" + addressRegex + "|" + ssnRegex + "|" + nameRegex + "|" + infoRegex;
+        Pattern pattern = Pattern.compile(combinedRegex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
+    }
+
+	public static boolean is90PercentSimilar(String str1, String str2) {
+		int len1 = str1.length();
+        int len2 = str2.length();
+
+        if (len1 > len2) {
+            String temp = str1;
+            str1 = str2;
+            str2 = temp;
+            int tempLen = len1;
+            len1 = len2;
+            len2 = tempLen;
+        }
+
+        int[] prevRow = new int[len1 + 1];
+        int[] currRow = new int[len1 + 1];
+
+        for (int i = 0; i <= len1; i++) {
+            prevRow[i] = i;
+        }
+
+        for (int j = 1; j <= len2; j++) {
+            currRow[0] = j;
+            for (int i = 1; i <= len1; i++) {
+                int cost = (str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1;
+                int deletion = prevRow[i] + 1;
+                int insertion = currRow[i - 1] + 1;
+                int substitution = prevRow[i - 1] + cost;
+                currRow[i] = Math.min(Math.min(deletion, insertion), substitution);
+            }
+            int[] temp = prevRow;
+            prevRow = currRow;
+            currRow = temp;
+        }
+
+        int distance = prevRow[len1];
+        double similarity = 1.0 - (double) distance / Math.max(len1, len2);
+        return similarity >= 0.9;
 	}
 }
