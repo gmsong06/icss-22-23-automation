@@ -32,8 +32,9 @@ public class Main {
 		String[] files = dir.list();
 		files[0]="Extempore.har";
 
-	
-			
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));
+
 		for(String f : files){
 			if(!f.endsWith(".har")) continue;
 		
@@ -57,14 +58,19 @@ public class Main {
 						}
 					}
 				}
-				writeData(strategy, f);
+
+				writeData(strategy, f, writer);
 				addDataTotals(strategy);
 			}
 			
 			System.out.println("STOPPED MODIFYING " + f);
 		} 
 			
-		writeFinalData();
+		writeFinalData(writer);
+
+		} catch (IOException io) {
+
+		}
 		
 		DBConnection.close();
 		
@@ -95,11 +101,9 @@ public class Main {
 		staticGenerationStrategies.put("ADD_RANDOM_STRING", new GenerationStrategyAddRandomString());
 	}
 
-	public static void writeData(GenerationStrategy strategy, String f){
+	public static void writeData(GenerationStrategy strategy, String f, BufferedWriter writer){
 		try{
-			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));
-
-			writer.write(strategy.getStrategyDescription() + " generated ");
+			writer.write(strategy.getStrategyDescription() + " from app " + f.substring(0, f.indexOf(".har")) + " generated ");
 			writer.write(strategy.getUnsuccessfulRequests() + " unsuccessful requests and ");
 			writer.write(strategy.getSuccessfulRequests() + " successful requests with ");
 			writer.write(strategy.getModifiedResponses() + " modified responses and ");
@@ -111,7 +115,7 @@ public class Main {
 			writer.write("Number of calls including sensitive data: " + strategy.getSensitiveData()); 
 			writer.write("\nNumber of calls including 90% similar data: " + strategy.getSimilarData()); 
 			writer.write("\n\n");
-			writer.close();
+			// writer.close();
 		} catch (Exception e){
 			System.out.println("Error occured in file writing");
 		}
@@ -126,9 +130,9 @@ public class Main {
 		totalUnmodifiedCalls+=strategy.getUnmodifiedResponses();
 	}
 
-	public static void writeFinalData(){
+	public static void writeFinalData(BufferedWriter writer){
 		try{
-			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));
+			// BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));
 
 			writer.write("\n\nStatus Code : # of occurances\n");
 			for(int i : statusCodes.keySet())

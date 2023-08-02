@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>org.javalite</groupId>
 			<artifactId>activejdbc</artifactId>
-			<version>3.4-j11</version>
+			<version>3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -56,7 +56,7 @@
 			<plugin>
 				<groupId>org.javalite</groupId>
 				<artifactId>activejdbc-instrumentation</artifactId>
-				<version>3.4-j11</version>
+				<version>3.0</version>
 				<executions>
 					<execution>
 						<phase>process-classes</phase>
@@ -80,7 +80,7 @@
 				<plugin>
 					<groupId>org.javalite</groupId>
 					<artifactId>activejdbc-instrumentation</artifactId>
-					<version>3.4-j11</version>
+					<version>3.0</version>
 					<executions>
 						<execution>
 							<?m2e ignore?>
