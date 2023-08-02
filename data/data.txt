@@ -1,0 +1,179 @@
+Adding string a to header of each request from app Extempore generated 34 unsuccessful requests and 25 successful requests with 16 modified responses and 9 unmodified responses
+Success Rate: 42%
+Modification Rate: 64%
+Number of calls including sensitive data: 10
+Number of calls including 90% similar data: 9
+
+Appending JSON pair apple:banana to request body from app Extempore generated 1 unsuccessful requests and 6 successful requests with 6 modified responses and 0 unmodified responses
+Success Rate: 85%
+Modification Rate: 100%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Adding random string of size 100 to each request from app Extempore generated 34 unsuccessful requests and 25 successful requests with 16 modified responses and 9 unmodified responses
+Success Rate: 42%
+Modification Rate: 64%
+Number of calls including sensitive data: 10
+Number of calls including 90% similar data: 9
+
+Deleting request body from app Extempore generated 34 unsuccessful requests and 25 successful requests with 16 modified responses and 9 unmodified responses
+Success Rate: 42%
+Modification Rate: 64%
+Number of calls including sensitive data: 10
+Number of calls including 90% similar data: 9
+
+Iterating User ID from app Extempore generated 1 unsuccessful requests and 0 successful requests with 0 modified responses and 0 unmodified responses
+Success Rate: 0%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Removing a header at a time from request from app Extempore generated 34 unsuccessful requests and 331 successful requests with 211 modified responses and 120 unmodified responses
+Success Rate: 90%
+Modification Rate: 63%
+Number of calls including sensitive data: 127
+Number of calls including 90% similar data: 120
+
+Iterating URL parameters from app Extempore generated 23 unsuccessful requests and 0 successful requests with 0 modified responses and 0 unmodified responses
+Success Rate: 0%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Adding string a to header of each request from app einstein-Bagels generated 34 unsuccessful requests and 27 successful requests with 18 modified responses and 9 unmodified responses
+Success Rate: 44%
+Modification Rate: 66%
+Number of calls including sensitive data: 11
+Number of calls including 90% similar data: 10
+
+Appending JSON pair apple:banana to request body from app einstein-Bagels generated 1 unsuccessful requests and 6 successful requests with 6 modified responses and 0 unmodified responses
+Success Rate: 85%
+Modification Rate: 100%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Adding random string of size 100 to each request from app einstein-Bagels generated 35 unsuccessful requests and 26 successful requests with 17 modified responses and 9 unmodified responses
+Success Rate: 42%
+Modification Rate: 65%
+Number of calls including sensitive data: 10
+Number of calls including 90% similar data: 10
+
+Deleting request body from app einstein-Bagels generated 34 unsuccessful requests and 27 successful requests with 18 modified responses and 9 unmodified responses
+Success Rate: 44%
+Modification Rate: 66%
+Number of calls including sensitive data: 11
+Number of calls including 90% similar data: 10
+
+Iterating User ID from app einstein-Bagels generated 1 unsuccessful requests and 0 successful requests with 0 modified responses and 0 unmodified responses
+Success Rate: 0%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Removing a header at a time from request from app einstein-Bagels generated 36 unsuccessful requests and 331 successful requests with 211 modified responses and 120 unmodified responses
+Success Rate: 90%
+Modification Rate: 63%
+Number of calls including sensitive data: 127
+Number of calls including 90% similar data: 120
+
+Iterating URL parameters from app einstein-Bagels generated 25 unsuccessful requests and 64 successful requests with 64 modified responses and 0 unmodified responses
+Success Rate: 71%
+Modification Rate: 100%
+Number of calls including sensitive data: 32
+Number of calls including 90% similar data: 32
+
+Adding string a to header of each request from app Extempore generated 68 unsuccessful requests and 52 successful requests with 34 modified responses and 18 unmodified responses
+Success Rate: 43%
+Modification Rate: 65%
+Number of calls including sensitive data: 21
+Number of calls including 90% similar data: 19
+
+Appending JSON pair apple:banana to request body from app Extempore generated 2 unsuccessful requests and 12 successful requests with 12 modified responses and 0 unmodified responses
+Success Rate: 85%
+Modification Rate: 100%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Adding random string of size 100 to each request from app Extempore generated 68 unsuccessful requests and 52 successful requests with 34 modified responses and 18 unmodified responses
+Success Rate: 43%
+Modification Rate: 65%
+Number of calls including sensitive data: 21
+Number of calls including 90% similar data: 19
+
+Deleting request body from app Extempore generated 68 unsuccessful requests and 52 successful requests with 34 modified responses and 18 unmodified responses
+Success Rate: 43%
+Modification Rate: 65%
+Number of calls including sensitive data: 21
+Number of calls including 90% similar data: 19
+
+Iterating User ID from app Extempore generated 2 unsuccessful requests and 0 successful requests with 0 modified responses and 0 unmodified responses
+Success Rate: 0%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Removing a header at a time from request from app Extempore generated 70 unsuccessful requests and 662 successful requests with 422 modified responses and 240 unmodified responses
+Success Rate: 90%
+Modification Rate: 63%
+Number of calls including sensitive data: 254
+Number of calls including 90% similar data: 240
+
+Iterating URL parameters from app Extempore generated 48 unsuccessful requests and 64 successful requests with 64 modified responses and 0 unmodified responses
+Success Rate: 57%
+Modification Rate: 100%
+Number of calls including sensitive data: 32
+Number of calls including 90% similar data: 32
+
+Adding string a to header of each request from app MarketPlace generated 78 unsuccessful requests and 75 successful requests with 36 modified responses and 39 unmodified responses
+Success Rate: 49%
+Modification Rate: 48%
+Number of calls including sensitive data: 25
+Number of calls including 90% similar data: 42
+
+Appending JSON pair apple:banana to request body from app MarketPlace generated 4 unsuccessful requests and 12 successful requests with 12 modified responses and 0 unmodified responses
+Success Rate: 75%
+Modification Rate: 100%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Adding random string of size 100 to each request from app MarketPlace generated 78 unsuccessful requests and 75 successful requests with 36 modified responses and 39 unmodified responses
+Success Rate: 49%
+Modification Rate: 48%
+Number of calls including sensitive data: 25
+Number of calls including 90% similar data: 42
+
+Deleting request body from app MarketPlace generated 78 unsuccessful requests and 75 successful requests with 36 modified responses and 39 unmodified responses
+Success Rate: 49%
+Modification Rate: 48%
+Number of calls including sensitive data: 25
+Number of calls including 90% similar data: 42
+
+Iterating User ID from app MarketPlace generated 3 unsuccessful requests and 0 successful requests with 0 modified responses and 0 unmodified responses
+Success Rate: 0%
+Number of calls including sensitive data: 0
+Number of calls including 90% similar data: 0
+
+Removing a header at a time from request from app MarketPlace generated 80 unsuccessful requests and 784 successful requests with 436 modified responses and 348 unmodified responses
+Success Rate: 90%
+Modification Rate: 55%
+Number of calls including sensitive data: 282
+Number of calls including 90% similar data: 362
+
+Iterating URL parameters from app MarketPlace generated 70 unsuccessful requests and 261 successful requests with 261 modified responses and 0 unmodified responses
+Success Rate: 78%
+Modification Rate: 100%
+Number of calls including sensitive data: 32
+Number of calls including 90% similar data: 32
+
+
+
+Status Code : # of occurances
+400 : 45004
+304 : 16680
+401 : 593
+404 : 311
+200 : 147399
+411 : 97
+
+Total number of successful calls: 3069
+Total number of unsuccessful calls: 1044
+Total number of modified calls: 2016
+Total number of unmodified calls: 1053
+Total number of sensitive calls: 1086
+Total number of similar calls: 1178
