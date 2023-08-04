@@ -132,6 +132,14 @@ public class Request extends Model { // the Request model that is stored in the 
 	public Object getModification() {
 		return this.get("modification");
 	}
+
+	public Object getUrlModification() {
+		return this.get("url_modification");
+	}
+
+	public Object getBodyModification() {
+		return this.get("body_modification");
+	}
 	
 	public boolean checkRequestBody() {
 		if(request.getPostData().getText() != null) return true;

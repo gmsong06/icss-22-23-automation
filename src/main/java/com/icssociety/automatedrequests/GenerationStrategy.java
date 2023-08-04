@@ -1,4 +1,5 @@
 package com.icssociety.automatedrequests;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public abstract class GenerationStrategy {
 		return unmodifiedBody;
 	}
 	
-	public void sendModifiedRequest(Request request) {
+	public void sendModifiedRequest(Request request, BufferedWriter writer) {
 
 		//setting up + building HTTP Requests
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -113,7 +114,16 @@ public abstract class GenerationStrategy {
 					new_request.setModification(modified_headers.get(new_headers.get(i)));
 					
 					//if the modified response body contains sensitive data using regexs
-					if(containsData(res)) numSensitiveData++;
+					if(containsData(res)) {
+						numSensitiveData++;
+						//flag dissimilar and sensitive data
+						if(!is90PercentSimilar(request.getResponseBody().toString(), res)) {
+							new_request.setIsGenerated(-1);
+							writer.write(modified_headers.get(new_headers.get(i)) + "\n");
+							writer.write(modified_bodies.get(body) + "\n");
+							writer.write("\n");
+						}
+					}
 					//if the unmodified request response body is similar to the modified request response body
 					if(is90PercentSimilar(request.getResponseBody().toString(), res)) numSimilarData++;
 

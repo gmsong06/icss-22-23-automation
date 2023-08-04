@@ -34,6 +34,7 @@ public class Main {
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));
+			BufferedWriter flagWriter = new BufferedWriter(new FileWriter("./data/flags.txt"));
 
 		for(String f : files){
 			if(!f.endsWith(".har")) continue;
@@ -46,12 +47,13 @@ public class Main {
 			putStrategies();
 
 			System.out.println("STARTED MODIFYING " + f);
+			flagWriter.write("Modifications that generated flagged results from app " + f + ":" + "\n\n");
 			for(String str: staticGenerationStrategies.keySet()) {
 				GenerationStrategy strategy = staticGenerationStrategies.get(str);
 				for(int i = 1; i < Base.count("requests") + 1; i++) {
 					Request req = Request.findById(i);
 					if(Integer.valueOf(req.getIsGenerated().toString()) == 0) {
-						strategy.sendModifiedRequest(req);
+						strategy.sendModifiedRequest(req, flagWriter);
 						for(int j : strategy.getStatusCodes().keySet()){
 							if(statusCodes.containsKey(j)) statusCodes.replace(j, statusCodes.get(j), statusCodes.get(j)+strategy.getStatusCodes().get(j));
 							else statusCodes.put(j, strategy.getStatusCodes().get(j));
@@ -65,7 +67,8 @@ public class Main {
 			
 			System.out.println("STOPPED MODIFYING " + f);
 		} 
-			
+		
+		flagWriter.close();
 		writeFinalData(writer);
 
 		} catch (IOException io) {
