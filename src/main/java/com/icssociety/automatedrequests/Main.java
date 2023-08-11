@@ -30,7 +30,7 @@ public class Main {
 		
 		File dir = new File("./data");
 		String[] files = dir.list();
-		files[0]="Extempore.har";
+		// files[0]="Extempore.har";
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));

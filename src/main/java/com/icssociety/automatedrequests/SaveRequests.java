@@ -14,18 +14,34 @@ public class SaveRequests {
 			HarEntry entry = entries.get(i);
 			
 			Request request = new Request(entry, "Ann", 0);
-			request.save();
+			try {
+				request.save();
+			} catch(Exception e) {
+				System.out.println("Error occurred saving request");
+				continue;
+			}
+			
 			
 			List<HarHeader> requestHeaders = entry.getRequest().getHeaders();
 			for(HarHeader h : requestHeaders) {
 				RequestHeader requestHeader = new RequestHeader(h, ((BigInteger) request.getId()).intValue());
+				try {
 				requestHeader.save();
+			} catch(Exception e) {
+				System.out.println("Error occurred saving request header");
+			}
+			
 			}
 			
 			List<HarHeader> responseHeaders = entry.getResponse().getHeaders();
 			for(HarHeader h : responseHeaders) {
 				ResponseHeader responseHeader = new ResponseHeader(h, ((BigInteger) request.getId()).intValue());
+				try {
 				responseHeader.save();
+			} catch(Exception e) {
+				System.out.println("Error occurred saving response header");
+			}
+			
 			}
 			
 		}
