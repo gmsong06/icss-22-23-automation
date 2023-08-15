@@ -50,7 +50,9 @@ public class Main {
 			flagWriter.write("Modifications that generated flagged results from app " + f + ":" + "\n\n");
 			for(String str: staticGenerationStrategies.keySet()) {
 				GenerationStrategy strategy = staticGenerationStrategies.get(str);
+				System.out.println(strategy.getStrategyDescription());
 				for(int i = 1; i < Base.count("requests") + 1; i++) {
+					System.out.println("request id: " + i);
 					Request req = Request.findById(i);
 					if(Integer.valueOf(req.getIsGenerated().toString()) == 0) {
 						strategy.sendModifiedRequest(req, flagWriter);

@@ -41,6 +41,11 @@
 			<version>8.0.32</version>
 		</dependency>
 		<dependency>
+    <groupId>net.ricecode</groupId>
+	<artifactId>string-similarity</artifactId>
+	<version>1.0.0</version>
+</dependency>
+		<dependency>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client</artifactId>
   <version>1.43.1</version>

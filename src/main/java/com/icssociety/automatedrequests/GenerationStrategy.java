@@ -15,6 +15,12 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+
+import net.ricecode.similarity.LevenshteinDistanceStrategy;
+import net.ricecode.similarity.SimilarityStrategy;
+import net.ricecode.similarity.StringSimilarityService;
+import net.ricecode.similarity.StringSimilarityServiceImpl;
+
 import java.util.regex.*;
 
 public abstract class GenerationStrategy {
@@ -114,7 +120,16 @@ public abstract class GenerationStrategy {
 					new_request.setModification(modified_headers.get(new_headers.get(i)));
 					
 					//if the modified response body contains sensitive data using regexs
-					if(containsData(res)) {
+
+					if(returnsCode(res)) {
+						System.out.println("code");
+						writer.write("Code returned:" + "\n");
+						writer.write(modified_headers.get(new_headers.get(i)) + "\n");
+						writer.write(modified_bodies.get(body) + "\n");
+						writer.write("\n");
+						numSensitiveData++;
+					} else {
+						if(containsData(res)) {
 						numSensitiveData++;
 						//flag dissimilar and sensitive data
 						if(!is90PercentSimilar(request.getResponseBody().toString(), res)) {
@@ -123,9 +138,10 @@ public abstract class GenerationStrategy {
 							writer.write(modified_bodies.get(body) + "\n");
 							writer.write("\n");
 						}
+						}
+						//if the unmodified request response body is similar to the modified request response body
+						if(is90PercentSimilar(request.getResponseBody().toString(), res)) numSimilarData++;
 					}
-					//if the unmodified request response body is similar to the modified request response body
-					if(is90PercentSimilar(request.getResponseBody().toString(), res)) numSimilarData++;
 
 					response.disconnect();
 					successfulRequests++;
@@ -184,6 +200,16 @@ public abstract class GenerationStrategy {
 		return statusCodes;
 	}
 
+	public static boolean returnsCode(String input) {
+		String cssRegex = "\\b(css|border|color|font)\\b";
+		String htmlRegex = "\\b(<body>|<main>|</svg>|/>)\\b";
+		String javaScriptRegex = "\\b(void|console|function|return|var|request)\\b";
+		String combinedRegex = cssRegex + "|" + htmlRegex + "|" + javaScriptRegex;
+		Pattern pattern = Pattern.compile(combinedRegex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
+	}
+
 
 	public static boolean containsData(String input) {
         String phoneRegex = "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b";
@@ -200,41 +226,44 @@ public abstract class GenerationStrategy {
     }
 
 	public static boolean is90PercentSimilar(String str1, String str2) {
-		int len1 = str1.length();
-        int len2 = str2.length();
+		SimilarityStrategy strategy = new LevenshteinDistanceStrategy();
+		StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
+		return service.score(str1, str2) >= 0.9;
+		// int len1 = str1.length();
+        // int len2 = str2.length();
 
-        if (len1 > len2) {
-            String temp = str1;
-            str1 = str2;
-            str2 = temp;
-            int tempLen = len1;
-            len1 = len2;
-            len2 = tempLen;
-        }
+        // if (len1 > len2) {
+        //     String temp = str1;
+        //     str1 = str2;
+        //     str2 = temp;
+        //     int tempLen = len1;
+        //     len1 = len2;
+        //     len2 = tempLen;
+        // }
 
-        int[] prevRow = new int[len1 + 1];
-        int[] currRow = new int[len1 + 1];
+        // int[] prevRow = new int[len1 + 1];
+        // int[] currRow = new int[len1 + 1];
 
-        for (int i = 0; i <= len1; i++) {
-            prevRow[i] = i;
-        }
+        // for (int i = 0; i <= len1; i++) {
+        //     prevRow[i] = i;
+        // }
 
-        for (int j = 1; j <= len2; j++) {
-            currRow[0] = j;
-            for (int i = 1; i <= len1; i++) {
-                int cost = (str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1;
-                int deletion = prevRow[i] + 1;
-                int insertion = currRow[i - 1] + 1;
-                int substitution = prevRow[i - 1] + cost;
-                currRow[i] = Math.min(Math.min(deletion, insertion), substitution);
-            }
-            int[] temp = prevRow;
-            prevRow = currRow;
-            currRow = temp;
-        }
+        // for (int j = 1; j <= len2; j++) {
+        //     currRow[0] = j;
+        //     for (int i = 1; i <= len1; i++) {
+        //         int cost = (str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1;
+        //         int deletion = prevRow[i] + 1;
+        //         int insertion = currRow[i - 1] + 1;
+        //         int substitution = prevRow[i - 1] + cost;
+        //         currRow[i] = Math.min(Math.min(deletion, insertion), substitution);
+        //     }
+        //     int[] temp = prevRow;
+        //     prevRow = currRow;
+        //     currRow = temp;
+        // }
 
-        int distance = prevRow[len1];
-        double similarity = 1.0 - (double) distance / Math.max(len1, len2);
-        return similarity >= 0.9;
+        // int distance = prevRow[len1];
+        // double similarity = 1.0 - (double) distance / Math.max(len1, len2);
+        // return similarity >= 0.9;
 	}
 }
