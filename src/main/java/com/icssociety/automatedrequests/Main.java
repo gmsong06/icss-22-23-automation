@@ -20,6 +20,9 @@ public class Main {
 	static private int totalUnsuccessfulCalls = 0;
 	static private int totalModifiedCalls = 0;
 	static private int totalUnmodifiedCalls = 0;
+	static private int totalCodeReturns = 0;
+	static private int totalErrorCalls = 0;
+	static private int totalFlaggedCalls = 0;
 	
 	public static void main(String[] args) throws HarReaderException {
 		DBConnection.open();
@@ -35,6 +38,7 @@ public class Main {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));
 			BufferedWriter flagWriter = new BufferedWriter(new FileWriter("./data/flags.txt"));
+			BufferedWriter errorWriter = new BufferedWriter(new FileWriter("./data/errors.txt"));
 
 		for(String f : files){
 			if(!f.endsWith(".har")) continue;
@@ -55,7 +59,7 @@ public class Main {
 					System.out.println("request id: " + i);
 					Request req = Request.findById(i);
 					if(Integer.valueOf(req.getIsGenerated().toString()) == 0) {
-						strategy.sendModifiedRequest(req, flagWriter);
+						strategy.sendModifiedRequest(req, flagWriter, errorWriter);
 						for(int j : strategy.getStatusCodes().keySet()){
 							if(statusCodes.containsKey(j)) statusCodes.replace(j, statusCodes.get(j), statusCodes.get(j)+strategy.getStatusCodes().get(j));
 							else statusCodes.put(j, strategy.getStatusCodes().get(j));
@@ -71,6 +75,7 @@ public class Main {
 		} 
 		
 		flagWriter.close();
+		errorWriter.close();
 		writeFinalData(writer);
 
 		} catch (IOException io) {
@@ -119,6 +124,9 @@ public class Main {
 			}
 			writer.write("Number of calls including sensitive data: " + strategy.getSensitiveData()); 
 			writer.write("\nNumber of calls including 90% similar data: " + strategy.getSimilarData()); 
+			writer.write("\nNumber of flagged calls: " + strategy.getFlaggedData()); 
+			writer.write("\nNumber of parsing errors encountered: " + strategy.getErrorData()); 
+			writer.write("\nNumber of calls returning code: " + strategy.getCodeData()); 
 			writer.write("\n\n");
 			// writer.close();
 		} catch (Exception e){
@@ -133,13 +141,16 @@ public class Main {
 		totalUnsuccessfulCalls+=strategy.getUnsuccessfulRequests();
 		totalModifiedCalls+=strategy.getModifiedResponses();
 		totalUnmodifiedCalls+=strategy.getUnmodifiedResponses();
+		totalFlaggedCalls+=strategy.getFlaggedData();
+		totalCodeReturns+=strategy.getCodeData();
+		totalErrorCalls+=strategy.getErrorData();
 	}
 
 	public static void writeFinalData(BufferedWriter writer){
 		try{
 			// BufferedWriter writer = new BufferedWriter(new FileWriter("./data/data.txt"));
 
-			writer.write("\n\nStatus Code : # of occurances\n");
+			writer.write("\n\nStatus Code : # of occurences\n");
 			for(int i : statusCodes.keySet())
 				writer.write(Integer.toString(i) + " : " + Integer.toString(statusCodes.get(i)) + "\n");
 			writer.write("\nTotal number of successful calls: " + totalSuccessfulCalls);
@@ -148,6 +159,9 @@ public class Main {
 			writer.write("\nTotal number of unmodified calls: " + totalUnmodifiedCalls);
 			writer.write("\nTotal number of sensitive calls: " + totalSensitiveData);
 			writer.write("\nTotal number of similar calls: " + totalSimilarData);
+			writer.write("\nTotal number of flagged calls: " + totalFlaggedCalls);
+			writer.write("\nTotal number of errored calls: " + totalErrorCalls);
+			writer.write("\nTotal number of calls returning code: " + totalCodeReturns);
 
 			writer.close();
 

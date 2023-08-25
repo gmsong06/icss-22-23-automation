@@ -32,6 +32,9 @@ public abstract class GenerationStrategy {
 	private int unmodifiedResponses = 0;
 	private int numSensitiveData = 0;
 	private int numSimilarData = 0;
+	private int numFlaggedData = 0;
+	private int numErrorData = 0;
+	private int numCodeData = 0;
 	private HashMap<Integer, Integer> statusCodes = new HashMap<>();
 
 	
@@ -63,7 +66,7 @@ public abstract class GenerationStrategy {
 		return unmodifiedBody;
 	}
 	
-	public void sendModifiedRequest(Request request, BufferedWriter writer) {
+	public void sendModifiedRequest(Request request, BufferedWriter flagWriter, BufferedWriter errorWriter) {
 
 		//setting up + building HTTP Requests
 		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -121,22 +124,33 @@ public abstract class GenerationStrategy {
 					
 					//if the modified response body contains sensitive data using regexs
 
+
 					if(returnsCode(res)) {
 						System.out.println("code");
-						writer.write("Code returned:" + "\n");
-						writer.write(modified_headers.get(new_headers.get(i)) + "\n");
-						writer.write(modified_bodies.get(body) + "\n");
-						writer.write("\n");
-						numSensitiveData++;
-					} else {
+						errorWriter.write("Code returned:" + "\n");
+						errorWriter.write(modified_headers.get(new_headers.get(i)) + "\n");
+						errorWriter.write(modified_bodies.get(body) + "\n");
+						errorWriter.write("\n");
+						numCodeData++;
+					}
+					 else if(checkLength(res)) {
+						System.out.println("error, response too long to parse");
+						errorWriter.write("Error parsing data:" + "\n");
+						errorWriter.write(modified_headers.get(new_headers.get(i)) + "\n");
+						errorWriter.write(modified_bodies.get(body) + "\n");
+						errorWriter.write(res + "\n");
+						errorWriter.write("\n");
+						numErrorData++;
+					}  else {
 						if(containsData(res)) {
 						numSensitiveData++;
 						//flag dissimilar and sensitive data
 						if(!is90PercentSimilar(request.getResponseBody().toString(), res)) {
 							new_request.setIsGenerated(-1);
-							writer.write(modified_headers.get(new_headers.get(i)) + "\n");
-							writer.write(modified_bodies.get(body) + "\n");
-							writer.write("\n");
+							flagWriter.write(modified_headers.get(new_headers.get(i)) + "\n");
+							flagWriter.write(modified_bodies.get(body) + "\n");
+							flagWriter.write("\n");
+							numFlaggedData++;
 						}
 						}
 						//if the unmodified request response body is similar to the modified request response body
@@ -196,6 +210,18 @@ public abstract class GenerationStrategy {
 		return numSimilarData;
 	}
 
+	public int getFlaggedData() {
+		return numFlaggedData;
+	}
+
+	public int getErrorData() {
+		return numErrorData;
+	}
+
+	public int getCodeData() {
+		return numCodeData;
+	}
+
 	public HashMap<Integer,Integer> getStatusCodes(){
 		return statusCodes;
 	}
@@ -203,13 +229,16 @@ public abstract class GenerationStrategy {
 	public static boolean returnsCode(String input) {
 		String cssRegex = "\\b(css|border|color|font)\\b";
 		String htmlRegex = "\\b(<body>|<main>|</svg>|/>)\\b";
-		String javaScriptRegex = "\\b(void|console|function|return|var|request)\\b";
+		String javaScriptRegex = "\\b(void|console|function|return|var|request|\u00FF)\\b";
 		String combinedRegex = cssRegex + "|" + htmlRegex + "|" + javaScriptRegex;
 		Pattern pattern = Pattern.compile(combinedRegex);
         Matcher matcher = pattern.matcher(input);
         return matcher.find();
 	}
 
+	public static boolean checkLength(String input) {
+		return input.length() > 100000;
+	}
 
 	public static boolean containsData(String input) {
         String phoneRegex = "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b";
@@ -228,6 +257,8 @@ public abstract class GenerationStrategy {
 	public static boolean is90PercentSimilar(String str1, String str2) {
 		SimilarityStrategy strategy = new LevenshteinDistanceStrategy();
 		StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
+		System.out.println(str1.length());
+		System.out.println(str2.length());
 		return service.score(str1, str2) >= 0.9;
 		// int len1 = str1.length();
         // int len2 = str2.length();
