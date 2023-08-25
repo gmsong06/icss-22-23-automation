@@ -52,6 +52,7 @@ public class Main {
 
 			System.out.println("STARTED MODIFYING " + f);
 			flagWriter.write("Modifications that generated flagged results from app " + f + ":" + "\n\n");
+			errorWriter.write("Modifications that generated unparseable results or returend code from app " + f + ":" + "\n\n");
 			for(String str: staticGenerationStrategies.keySet()) {
 				GenerationStrategy strategy = staticGenerationStrategies.get(str);
 				System.out.println(strategy.getStrategyDescription());
